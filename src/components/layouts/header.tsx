@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import { Menu, X } from "lucide-react"
+import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -18,16 +19,17 @@ import { cn } from "@/lib/utils"
 
 interface NavItem {
   name: string
+  href?: string
 }
 
 interface HeaderProps extends React.HTMLAttributes<HTMLElement> {}
 
 const navigationItems: NavItem[] = [
-  { name: "New cars" },
-  { name: "Used cars" },
-  { name: "Online appraisal" }, 
-  { name: "Dealers" },
-  { name: "Contact" },
+  { name: "New cars", href: "/new-cars" },
+  { name: "Used cars", href: "/used-cars" },
+  { name: "Online appraisal", href: "/online-appraisal" }, 
+  { name: "Dealers", href: "/dealers" },
+  { name: "Contact", href: "/contact" },
 ]
 
 const HeaderLogo = React.forwardRef<
@@ -35,7 +37,7 @@ const HeaderLogo = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div ref={ref} className={cn("mr-8 flex", className)} {...props}>
-    <Brand />
+    <Brand href="/" text="Finder" />
   </div>
 ))
 HeaderLogo.displayName = "HeaderLogo"
@@ -51,13 +53,14 @@ const DesktopNav = React.forwardRef<HTMLElement, DesktopNavProps>(
       className={cn("hidden md:flex items-center space-x-6", className)}
       {...props}
     >
-      {items.map((item) => (
-        <span
+      {items.map((item) => (  
+        <Link
           key={item.name}
+          href={item.href || "/"}
           className="text-sm font-medium transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer"
         >
           {item.name}
-        </span>
+        </Link>
       ))}
     </nav>
   )
@@ -65,7 +68,7 @@ const DesktopNav = React.forwardRef<HTMLElement, DesktopNavProps>(
 DesktopNav.displayName = "DesktopNav"
 
 const UserMenu = React.forwardRef<
-  React.ElementRef<typeof Button>,
+  React.ComponentRef<typeof Button>,
   React.ComponentPropsWithoutRef<typeof Button>
 >(({ className, ...props }, ref) => (
   <Button
@@ -86,7 +89,7 @@ interface CTAButtonProps extends React.ComponentPropsWithoutRef<typeof Button> {
 }
 
 const CTAButton = React.forwardRef<
-  React.ElementRef<typeof Button>,
+  React.ComponentRef<typeof Button>,
   CTAButtonProps
 >(({ text = "Sell car", className, ...props }, ref) => (
   <Button
@@ -163,7 +166,7 @@ const HeaderActions = React.forwardRef<HTMLDivElement, HeaderActionsProps>(
     return (
       <div 
         ref={ref}
-        className={cn("flex flex-1 items-center justify-end space-x-4", className)}
+        className={cn("flex items-center justify-end space-x-4", className)}
         {...props}
       >
         <ModeToggle />
@@ -185,7 +188,7 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(
     <header 
       ref={ref}
       className={cn(
-        "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        "sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
         className
       )}
       {...props}
