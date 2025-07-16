@@ -12,9 +12,9 @@ const sampleCars = [
     imageUrl:
       'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400&h=300&fit=crop',
     title: 'Volvo XC90 Sport 4WD',
-    year: 2018,
+    year: 2019,
     price: 43500,
-    date: '22/05/2024',
+    date: '27/05/2024',
     location: 'Houston',
     mileage: '78K mi',
     fuelType: 'Diesel',
@@ -29,9 +29,9 @@ const sampleCars = [
     imageUrl:
       'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400&h=300&fit=crop',
     title: 'Porsche 911 Turbo S',
-    year: 2017,
+    year: 2020,
     price: 85500,
-    date: '16/09/2024',
+    date: '26/05/2024',
     location: 'Chicago',
     mileage: '32K mi',
     fuelType: 'Gasoline',
