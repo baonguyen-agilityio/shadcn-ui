@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import { Button } from "@/components/ui";
-import { cn } from "@/lib/utils";
+import * as React from 'react';
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
+import { Button } from '@/components/ui';
+import { cn } from '@/lib/utils';
 
 interface YearPickerProps {
   selected?: Date;
@@ -39,7 +39,7 @@ export function YearPicker({
 
   const currentDecadeStart = Math.floor(currentYear / 10) * 10;
   const currentDecadeYears = years.filter(
-    (year) => year >= currentDecadeStart && year < currentDecadeStart + 10
+    year => year >= currentDecadeStart && year < currentDecadeStart + 10
   );
 
   const goToPreviousDecade = () => {
@@ -51,7 +51,7 @@ export function YearPicker({
   };
 
   return (
-    <div className={cn("p-3 bg-background", className)}>
+    <div className={cn('p-3 bg-background', className)}>
       {/* Header with navigation */}
       <div className="flex items-center justify-between mb-4">
         <Button
@@ -63,11 +63,11 @@ export function YearPicker({
         >
           <ChevronLeftIcon className="h-4 w-4" />
         </Button>
-        
+
         <div className="text-sm font-medium">
           {currentDecadeStart} - {Math.min(currentDecadeStart + 9, toYear)}
         </div>
-        
+
         <Button
           variant="ghost"
           size="icon"
@@ -81,10 +81,10 @@ export function YearPicker({
 
       {/* Year grid */}
       <div className="grid grid-cols-2 gap-2">
-        {currentDecadeYears.map((year) => (
+        {currentDecadeYears.map(year => (
           <Button
             key={year}
-            variant={selected?.getFullYear() === year ? "default" : "ghost"}
+            variant={selected?.getFullYear() === year ? 'default' : 'ghost'}
             size="sm"
             onClick={() => handleYearSelect(year)}
             className="h-8 text-sm"
@@ -95,4 +95,4 @@ export function YearPicker({
       </div>
     </div>
   );
-} 
+}

@@ -1,9 +1,10 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Heart, Bell, Share2, MapPin, Fuel, Settings } from "lucide-react";
-import { Badge, Button } from "@/components/ui";
-import { cn } from "@/lib/utils";
+import * as React from 'react';
+import Image from 'next/image';
+import { Heart, Bell, Share2, MapPin, Fuel, Settings } from 'lucide-react';
+import { Badge, Button } from '@/components/ui';
+import { cn } from '@/lib/utils';
 
 interface CarCardProps {
   id: string;
@@ -17,7 +18,7 @@ interface CarCardProps {
   fuelType: string;
   transmission: string;
   badges?: Array<{
-    type: "used" | "verified";
+    type: 'used' | 'verified';
     label: string;
   }>;
   onFavorite?: (id: string) => void;
@@ -55,28 +56,31 @@ export function CarCard({
   };
 
   return (
-    <div className={cn(
-      "bg-card border rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200",
-      className
-    )}>
+    <div
+      className={cn(
+        'bg-card border rounded-lg overflow-hidden hover:shadow-lg transition-shadow duration-200',
+        className
+      )}
+    >
       {/* Image Container */}
       <div className="relative aspect-[4/3] overflow-hidden">
-        <img
+        <Image
           src={imageUrl}
           alt={`${title} ${year}`}
-          className="w-full h-full object-cover hover:scale-105 transition-transform duration-200"
+          fill
+          className="object-cover hover:scale-105 transition-transform duration-200"
         />
-        
+
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">
           {badges.map((badge, index) => (
             <Badge
               key={index}
-              variant={badge.type === "verified" ? "default" : "secondary"}
+              variant={badge.type === 'verified' ? 'default' : 'secondary'}
               className={cn(
-                "text-xs font-medium",
-                badge.type === "verified" && "bg-blue-500 text-white",
-                badge.type === "used" && "bg-orange-500 text-white"
+                'text-xs font-medium',
+                badge.type === 'verified' && 'bg-blue-500 text-white',
+                badge.type === 'used' && 'bg-orange-500 text-white'
               )}
             >
               {badge.label}
@@ -92,10 +96,10 @@ export function CarCard({
             className="h-8 w-8 bg-white/80 hover:bg-white backdrop-blur-sm"
             onClick={handleFavorite}
           >
-            <Heart 
+            <Heart
               className={cn(
-                "h-4 w-4",
-                isFavorited ? "fill-red-500 text-red-500" : "text-gray-600"
+                'h-4 w-4',
+                isFavorited ? 'fill-red-500 text-red-500' : 'text-gray-600'
               )}
             />
           </Button>
@@ -139,7 +143,7 @@ export function CarCard({
             <MapPin className="h-3 w-3" />
             <span>{location}</span>
           </div>
-          
+
           <div className="flex items-center justify-between text-xs text-muted-foreground">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-1">
@@ -160,4 +164,4 @@ export function CarCard({
       </div>
     </div>
   );
-} 
+}

@@ -1,7 +1,12 @@
-import React from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
-import { AlertCircle, CheckCircle, Info as InfoIcon, AlertTriangle } from 'lucide-react'
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import {
+  AlertCircle,
+  CheckCircle,
+  Info as InfoIcon,
+  AlertTriangle,
+} from 'lucide-react';
 
 const meta: Meta<typeof Alert> = {
   title: 'UI/Alert',
@@ -16,10 +21,10 @@ const meta: Meta<typeof Alert> = {
       options: ['default', 'destructive', 'success', 'warning', 'info'],
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -31,7 +36,7 @@ export const Default: Story = {
       </AlertDescription>
     </Alert>
   ),
-}
+};
 
 export const Destructive: Story = {
   render: () => (
@@ -43,7 +48,7 @@ export const Destructive: Story = {
       </AlertDescription>
     </Alert>
   ),
-}
+};
 
 export const Success: Story = {
   render: () => (
@@ -55,7 +60,7 @@ export const Success: Story = {
       </AlertDescription>
     </Alert>
   ),
-}
+};
 
 export const Warning: Story = {
   render: () => (
@@ -67,7 +72,7 @@ export const Warning: Story = {
       </AlertDescription>
     </Alert>
   ),
-}
+};
 
 export const Info: Story = {
   render: () => (
@@ -79,7 +84,7 @@ export const Info: Story = {
       </AlertDescription>
     </Alert>
   ),
-}
+};
 
 export const AllVariants: Story = {
   render: () => (
@@ -111,4 +116,4 @@ export const AllVariants: Story = {
       </Alert>
     </div>
   ),
-} 
+};

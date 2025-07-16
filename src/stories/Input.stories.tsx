@@ -1,6 +1,6 @@
-import React from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { Input } from '@/components/ui/input'
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
+import { Input } from '@/components/ui/input';
 
 const meta: Meta<typeof Input> = {
   title: 'UI/Input',
@@ -21,57 +21,57 @@ const meta: Meta<typeof Input> = {
       control: 'text',
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
     placeholder: 'Enter text...',
   },
-}
+};
 
 export const Email: Story = {
   args: {
     type: 'email',
     placeholder: 'Enter your email...',
   },
-}
+};
 
 export const Password: Story = {
   args: {
     type: 'password',
     placeholder: 'Enter password...',
   },
-}
+};
 
 export const Number: Story = {
   args: {
     type: 'number',
     placeholder: '0',
   },
-}
+};
 
 export const Disabled: Story = {
   args: {
     disabled: true,
     placeholder: 'Disabled input',
   },
-}
+};
 
 export const WithValue: Story = {
   args: {
     defaultValue: 'Hello World',
   },
-}
+};
 
 export const Search: Story = {
   args: {
     type: 'search',
     placeholder: 'Search...',
   },
-}
+};
 
 export const AllTypes: Story = {
   render: () => (
@@ -86,4 +86,4 @@ export const AllTypes: Story = {
       <Input disabled placeholder="Disabled input" />
     </div>
   ),
-} 
+};

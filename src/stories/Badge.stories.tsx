@@ -1,6 +1,6 @@
-import React from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { Badge } from '@/components/ui/badge'
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
+import { Badge } from '@/components/ui/badge';
 
 const meta: Meta<typeof Badge> = {
   title: 'UI/Badge',
@@ -12,68 +12,77 @@ const meta: Meta<typeof Badge> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'secondary', 'destructive', 'outline', 'success', 'warning', 'info', 'danger'],
+      options: [
+        'default',
+        'secondary',
+        'destructive',
+        'outline',
+        'success',
+        'warning',
+        'info',
+        'danger',
+      ],
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
     children: 'Badge',
   },
-}
+};
 
 export const Secondary: Story = {
   args: {
     variant: 'secondary',
     children: 'Secondary',
   },
-}
+};
 
 export const Destructive: Story = {
   args: {
     variant: 'destructive',
     children: 'Destructive',
   },
-}
+};
 
 export const Outline: Story = {
   args: {
     variant: 'outline',
     children: 'Outline',
   },
-}
+};
 
 export const Success: Story = {
   args: {
     variant: 'success',
     children: 'Success',
   },
-}
+};
 
 export const Warning: Story = {
   args: {
     variant: 'warning',
     children: 'Warning',
   },
-}
+};
 
 export const Info: Story = {
   args: {
     variant: 'info',
     children: 'Info',
   },
-}
+};
 
 export const Danger: Story = {
   args: {
     variant: 'danger',
     children: 'Danger',
   },
-}
+};
 
 export const AllVariants: Story = {
   render: () => (
@@ -88,4 +97,4 @@ export const AllVariants: Story = {
       <Badge variant="danger">Danger</Badge>
     </div>
   ),
-} 
+};
