@@ -1,6 +1,6 @@
-import React from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { Slider } from '@/components/ui/slider'
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
+import { Slider } from '@/components/ui/slider';
 
 const meta: Meta<typeof Slider> = {
   title: 'UI/Slider',
@@ -26,10 +26,10 @@ const meta: Meta<typeof Slider> = {
       control: 'boolean',
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
@@ -38,12 +38,12 @@ export const Default: Story = {
     min: 0,
     step: 1,
   },
-  render: (args) => (
+  render: args => (
     <div className="w-64">
       <Slider {...args} />
     </div>
   ),
-}
+};
 
 export const Range: Story = {
   args: {
@@ -52,12 +52,12 @@ export const Range: Story = {
     min: 0,
     step: 1,
   },
-  render: (args) => (
+  render: args => (
     <div className="w-64">
       <Slider {...args} />
     </div>
   ),
-}
+};
 
 export const WithSteps: Story = {
   args: {
@@ -66,12 +66,12 @@ export const WithSteps: Story = {
     min: 0,
     step: 10,
   },
-  render: (args) => (
+  render: args => (
     <div className="w-64">
       <Slider {...args} />
     </div>
   ),
-}
+};
 
 export const Disabled: Story = {
   args: {
@@ -81,12 +81,12 @@ export const Disabled: Story = {
     step: 1,
     disabled: true,
   },
-  render: (args) => (
+  render: args => (
     <div className="w-64">
       <Slider {...args} />
     </div>
   ),
-}
+};
 
 export const Volume: Story = {
   render: () => (
@@ -105,4 +105,4 @@ export const Volume: Story = {
       </div>
     </div>
   ),
-} 
+};

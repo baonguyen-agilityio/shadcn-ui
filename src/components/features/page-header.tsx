@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,22 +8,22 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui"
-import { ActiveFilters, Filter } from "./active-filters"
-import { cn } from "@/lib/utils"
+} from '@/components/ui';
+import { ActiveFilters, Filter } from './active-filters';
+import { cn } from '@/lib/utils';
 
 interface BreadcrumbItem {
-  label: string
-  href?: string
+  label: string;
+  href?: string;
 }
 
 interface PageHeaderProps {
-  breadcrumbs: BreadcrumbItem[]
-  filters?: Filter[]
-  resultCount?: number
-  onRemoveFilter?: (filterId: string) => void
-  onClearAll?: () => void
-  className?: string
+  breadcrumbs: BreadcrumbItem[];
+  filters?: Filter[];
+  resultCount?: number;
+  onRemoveFilter?: (filterId: string) => void;
+  onClearAll?: () => void;
+  className?: string;
 }
 
 export function PageHeader({
@@ -32,10 +32,10 @@ export function PageHeader({
   resultCount,
   onRemoveFilter,
   onClearAll,
-  className
+  className,
 }: PageHeaderProps) {
   return (
-    <div className={cn("bg-background border-b", className)}>
+    <div className={cn('bg-background border-b', className)}>
       {/* Breadcrumb Navigation */}
       <div className="container mx-auto px-6 py-4">
         <Breadcrumb>
@@ -72,5 +72,5 @@ export function PageHeader({
         </div>
       )}
     </div>
-  )
-} 
+  );
+}

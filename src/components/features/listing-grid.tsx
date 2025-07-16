@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import { Grid3X3, List, Scale } from "lucide-react";
+import * as React from 'react';
+import { Grid3X3, List, Scale } from 'lucide-react';
 import {
   Select,
   SelectContent,
@@ -9,9 +9,9 @@ import {
   SelectTrigger,
   SelectValue,
   Button,
-} from "@/components/ui";
-import { CarCard } from "./car-card";
-import { cn } from "@/lib/utils";
+} from '@/components/ui';
+import { CarCard } from './car-card';
+import { cn } from '@/lib/utils';
 
 interface Car {
   id: string;
@@ -25,7 +25,7 @@ interface Car {
   fuelType: string;
   transmission: string;
   badges?: Array<{
-    type: "used" | "verified";
+    type: 'used' | 'verified';
     label: string;
   }>;
 }
@@ -47,11 +47,11 @@ export function ListingGrid({
   onCarShare,
   className,
 }: ListingGridProps) {
-  const [viewType, setViewType] = React.useState<"grid" | "list">("grid");
-  const [sortBy, setSortBy] = React.useState("popular");
+  const [viewType, setViewType] = React.useState<'grid' | 'list'>('grid');
+  const [sortBy, setSortBy] = React.useState('popular');
 
   return (
-    <div className={cn("space-y-4", className)}>
+    <div className={cn('space-y-4', className)}>
       {/* Header Controls */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
@@ -72,7 +72,11 @@ export function ListingGrid({
 
         <div className="flex items-center gap-2">
           {/* Compare Button */}
-          <Button variant="outline" size="sm" className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-2"
+          >
             <Scale className="h-4 w-4" />
             <span>Compare ({compareCount})</span>
           </Button>
@@ -80,18 +84,18 @@ export function ListingGrid({
           {/* View Toggle */}
           <div className="flex items-center border rounded-md">
             <Button
-              variant={viewType === "grid" ? "default" : "ghost"}
+              variant={viewType === 'grid' ? 'default' : 'ghost'}
               size="sm"
               className="rounded-r-none border-0"
-              onClick={() => setViewType("grid")}
+              onClick={() => setViewType('grid')}
             >
               <Grid3X3 className="h-4 w-4" />
             </Button>
             <Button
-              variant={viewType === "list" ? "default" : "ghost"}
+              variant={viewType === 'list' ? 'default' : 'ghost'}
               size="sm"
               className="rounded-l-none border-0"
-              onClick={() => setViewType("list")}
+              onClick={() => setViewType('list')}
             >
               <List className="h-4 w-4" />
             </Button>
@@ -100,9 +104,9 @@ export function ListingGrid({
       </div>
 
       {/* Car Grid */}
-      {viewType === "grid" ? (
+      {viewType === 'grid' ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {cars.map((car) => (
+          {cars.map(car => (
             <CarCard
               key={car.id}
               {...car}
@@ -114,7 +118,7 @@ export function ListingGrid({
         </div>
       ) : (
         <div className="space-y-4">
-          {cars.map((car) => (
+          {cars.map(car => (
             <CarCard
               key={car.id}
               {...car}
@@ -130,9 +134,11 @@ export function ListingGrid({
       {/* No Results */}
       {cars.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-muted-foreground">No cars found matching your criteria.</p>
+          <p className="text-muted-foreground">
+            No cars found matching your criteria.
+          </p>
         </div>
       )}
     </div>
   );
-} 
+}

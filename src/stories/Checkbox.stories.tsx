@@ -1,6 +1,6 @@
-import React from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { Checkbox } from '@/components/ui/checkbox'
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
+import { Checkbox } from '@/components/ui/checkbox';
 
 const meta: Meta<typeof Checkbox> = {
   title: 'UI/Checkbox',
@@ -17,16 +17,16 @@ const meta: Meta<typeof Checkbox> = {
       control: 'boolean',
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
     id: 'checkbox',
   },
-  render: (args) => (
+  render: args => (
     <div className="flex items-center space-x-2">
       <Checkbox {...args} />
       <label htmlFor="checkbox" className="text-sm font-medium leading-none">
@@ -34,37 +34,43 @@ export const Default: Story = {
       </label>
     </div>
   ),
-}
+};
 
 export const Checked: Story = {
   args: {
     checked: true,
     id: 'checkbox-checked',
   },
-  render: (args) => (
+  render: args => (
     <div className="flex items-center space-x-2">
       <Checkbox {...args} />
-      <label htmlFor="checkbox-checked" className="text-sm font-medium leading-none">
+      <label
+        htmlFor="checkbox-checked"
+        className="text-sm font-medium leading-none"
+      >
         Checked checkbox
       </label>
     </div>
   ),
-}
+};
 
 export const Disabled: Story = {
   args: {
     disabled: true,
     id: 'checkbox-disabled',
   },
-  render: (args) => (
+  render: args => (
     <div className="flex items-center space-x-2">
       <Checkbox {...args} />
-      <label htmlFor="checkbox-disabled" className="text-sm font-medium leading-none opacity-70">
+      <label
+        htmlFor="checkbox-disabled"
+        className="text-sm font-medium leading-none opacity-70"
+      >
         Disabled checkbox
       </label>
     </div>
   ),
-}
+};
 
 export const DisabledChecked: Story = {
   args: {
@@ -72,15 +78,18 @@ export const DisabledChecked: Story = {
     checked: true,
     id: 'checkbox-disabled-checked',
   },
-  render: (args) => (
+  render: args => (
     <div className="flex items-center space-x-2">
       <Checkbox {...args} />
-      <label htmlFor="checkbox-disabled-checked" className="text-sm font-medium leading-none opacity-70">
+      <label
+        htmlFor="checkbox-disabled-checked"
+        className="text-sm font-medium leading-none opacity-70"
+      >
         Disabled checked
       </label>
     </div>
   ),
-}
+};
 
 export const WithLabels: Story = {
   render: () => (
@@ -99,10 +108,13 @@ export const WithLabels: Story = {
       </div>
       <div className="flex items-center space-x-2">
         <Checkbox id="terms3" disabled />
-        <label htmlFor="terms3" className="text-sm font-medium leading-none opacity-70">
+        <label
+          htmlFor="terms3"
+          className="text-sm font-medium leading-none opacity-70"
+        >
           Not available
         </label>
       </div>
     </div>
   ),
-} 
+};

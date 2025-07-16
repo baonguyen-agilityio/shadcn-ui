@@ -1,6 +1,6 @@
-import React from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { Switch } from '@/components/ui/switch'
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
+import { Switch } from '@/components/ui/switch';
 
 const meta: Meta<typeof Switch> = {
   title: 'UI/Switch',
@@ -17,16 +17,16 @@ const meta: Meta<typeof Switch> = {
       control: 'boolean',
     },
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
     id: 'switch',
   },
-  render: (args) => (
+  render: args => (
     <div className="flex items-center space-x-2">
       <Switch {...args} />
       <label htmlFor="switch" className="text-sm font-medium">
@@ -34,14 +34,14 @@ export const Default: Story = {
       </label>
     </div>
   ),
-}
+};
 
 export const Checked: Story = {
   args: {
     checked: true,
     id: 'switch-checked',
   },
-  render: (args) => (
+  render: args => (
     <div className="flex items-center space-x-2">
       <Switch {...args} />
       <label htmlFor="switch-checked" className="text-sm font-medium">
@@ -49,22 +49,25 @@ export const Checked: Story = {
       </label>
     </div>
   ),
-}
+};
 
 export const Disabled: Story = {
   args: {
     disabled: true,
     id: 'switch-disabled',
   },
-  render: (args) => (
+  render: args => (
     <div className="flex items-center space-x-2">
       <Switch {...args} />
-      <label htmlFor="switch-disabled" className="text-sm font-medium opacity-70">
+      <label
+        htmlFor="switch-disabled"
+        className="text-sm font-medium opacity-70"
+      >
         Disabled switch
       </label>
     </div>
   ),
-}
+};
 
 export const DisabledChecked: Story = {
   args: {
@@ -72,15 +75,18 @@ export const DisabledChecked: Story = {
     checked: true,
     id: 'switch-disabled-checked',
   },
-  render: (args) => (
+  render: args => (
     <div className="flex items-center space-x-2">
       <Switch {...args} />
-      <label htmlFor="switch-disabled-checked" className="text-sm font-medium opacity-70">
+      <label
+        htmlFor="switch-disabled-checked"
+        className="text-sm font-medium opacity-70"
+      >
         Disabled enabled
       </label>
     </div>
   ),
-}
+};
 
 export const MultipleStates: Story = {
   render: () => (
@@ -111,4 +117,4 @@ export const MultipleStates: Story = {
       </div>
     </div>
   ),
-} 
+};

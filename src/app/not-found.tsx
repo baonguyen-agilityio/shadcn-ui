@@ -1,6 +1,6 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { TypographyH1, TypographyP } from "@/components/ui/typography"
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { TypographyH1, TypographyP } from '@/components/ui/typography';
 
 export default function NotFound() {
   return (
@@ -8,7 +8,8 @@ export default function NotFound() {
       <div className="mx-auto max-w-md">
         <TypographyH1 className="mb-4">Page Not Found</TypographyH1>
         <TypographyP className="mb-8 text-muted-foreground">
-          Sorry, we couldn't find the page you're looking for. This feature is coming soon.
+          Sorry, we couldn&apos;t find the page you&apos;re looking for. This
+          feature is coming soon.
         </TypographyP>
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
           <Button asChild>
@@ -20,5 +21,5 @@ export default function NotFound() {
         </div>
       </div>
     </div>
-  )
-} 
+  );
+}

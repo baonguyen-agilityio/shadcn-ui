@@ -1,5 +1,10 @@
-export { Button, buttonVariants } from "./button"
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "./accordion"
+export { Button, buttonVariants } from './button';
+export {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from './accordion';
 export {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -16,7 +21,7 @@ export {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuRadioGroup,
-} from "./dropdown-menu"
+} from './dropdown-menu';
 export {
   Select,
   SelectContent,
@@ -28,7 +33,7 @@ export {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
-} from "./select"
+} from './select';
 export {
   Breadcrumb,
   BreadcrumbEllipsis,
@@ -37,25 +42,25 @@ export {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "./breadcrumb"
-export { Input } from "./input"
-export { Checkbox } from "./checkbox"
-export { Switch } from "./switch"
-export { Slider } from "./slider"
-export { Calendar } from "./calendar"
-export { Popover, PopoverContent, PopoverTrigger } from "./popover"
-export { Brand } from "./brand"
-export { Badge, badgeVariants } from "./badge"
-export { Alert, AlertTitle, AlertDescription } from "./alert"
-export { 
-  Typography, 
-  TypographyH1, 
-  TypographyH2, 
-  TypographyH3, 
-  TypographyH4, 
-  TypographyP, 
-  TypographyLarge, 
-  TypographySmall, 
+} from './breadcrumb';
+export { Input } from './input';
+export { Checkbox } from './checkbox';
+export { Switch } from './switch';
+export { Slider } from './slider';
+export { Calendar } from './calendar';
+export { Popover, PopoverContent, PopoverTrigger } from './popover';
+export { Brand } from './brand';
+export { Badge, badgeVariants } from './badge';
+export { Alert, AlertTitle, AlertDescription } from './alert';
+export {
+  Typography,
+  TypographyH1,
+  TypographyH2,
+  TypographyH3,
+  TypographyH4,
+  TypographyP,
+  TypographyLarge,
+  TypographySmall,
   TypographyMuted,
-  typographyVariants
-} from "./typography" 
+  typographyVariants,
+} from './typography';
