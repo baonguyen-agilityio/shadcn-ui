@@ -1,62 +1,64 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import { Menu, X } from "lucide-react"
-import Link from "next/link"
+import * as React from 'react';
+import { Menu, X } from 'lucide-react';
+import Link from 'next/link';
 
-import { Button } from "@/components/ui/button"
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Brand } from "@/components/ui/brand"
-import { Plus, User } from "@/components/icons"
-import { ModeToggle } from "@/components/features/mode-toggle"
-import { cn } from "@/lib/utils"
+} from '@/components/ui/dropdown-menu';
+import { Brand } from '@/components/ui/brand';
+import { Plus, User } from '@/components/icons';
+import { ModeToggle } from '@/components/features/mode-toggle';
+import { cn } from '@/lib/utils';
 
 interface NavItem {
-  name: string
-  href?: string
+  name: string;
+  href?: string;
 }
 
-interface HeaderProps extends React.HTMLAttributes<HTMLElement> {}
+interface HeaderProps extends React.HTMLAttributes<HTMLElement> {
+  variant?: 'default' | 'transparent';
+}
 
 const navigationItems: NavItem[] = [
-  { name: "New cars", href: "/new-cars" },
-  { name: "Used cars", href: "/used-cars" },
-  { name: "Online appraisal", href: "/online-appraisal" }, 
-  { name: "Dealers", href: "/dealers" },
-  { name: "Contact", href: "/contact" },
-]
+  { name: 'New cars', href: '/new-cars' },
+  { name: 'Used cars', href: '/used-cars' },
+  { name: 'Online appraisal', href: '/online-appraisal' },
+  { name: 'Dealers', href: '/dealers' },
+  { name: 'Contact', href: '/contact' },
+];
 
 const HeaderLogo = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("mr-8 flex", className)} {...props}>
+  <div ref={ref} className={cn('mr-8 flex', className)} {...props}>
     <Brand href="/" text="Finder" />
   </div>
-))
-HeaderLogo.displayName = "HeaderLogo"
+));
+HeaderLogo.displayName = 'HeaderLogo';
 
 interface DesktopNavProps extends React.HTMLAttributes<HTMLElement> {
-  items: NavItem[]
+  items: NavItem[];
 }
 
 const DesktopNav = React.forwardRef<HTMLElement, DesktopNavProps>(
   ({ items, className, ...props }, ref) => (
-    <nav 
-      ref={ref} 
-      className={cn("hidden md:flex items-center space-x-6", className)}
+    <nav
+      ref={ref}
+      className={cn('hidden md:flex items-center space-x-6', className)}
       {...props}
     >
-      {items.map((item) => (  
+      {items.map(item => (
         <Link
           key={item.name}
-          href={item.href || "/"}
+          href={item.href || '/'}
           className="text-sm font-medium transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer"
         >
           {item.name}
@@ -64,8 +66,8 @@ const DesktopNav = React.forwardRef<HTMLElement, DesktopNavProps>(
       ))}
     </nav>
   )
-)
-DesktopNav.displayName = "DesktopNav"
+);
+DesktopNav.displayName = 'DesktopNav';
 
 const UserMenu = React.forwardRef<
   React.ComponentRef<typeof Button>,
@@ -75,61 +77,55 @@ const UserMenu = React.forwardRef<
     ref={ref}
     variant="ghost"
     size="icon"
-    className={cn("hidden sm:flex", className)}
+    className={cn('hidden sm:flex', className)}
     {...props}
   >
     <User className="h-4 w-4" />
     <span className="sr-only">User profile</span>
   </Button>
-))
-UserMenu.displayName = "UserMenu"
+));
+UserMenu.displayName = 'UserMenu';
 
 interface CTAButtonProps extends React.ComponentPropsWithoutRef<typeof Button> {
-  text?: string
+  text?: string;
 }
 
 const CTAButton = React.forwardRef<
   React.ComponentRef<typeof Button>,
   CTAButtonProps
->(({ text = "Sell car", className, ...props }, ref) => (
+>(({ text = 'Sell car', className, ...props }, ref) => (
   <Button
     ref={ref}
     variant="default"
-    className={cn("flex items-center gap-2", className)}
+    className={cn('flex items-center gap-2', className)}
     {...props}
   >
     <Plus className="h-3 w-3" />
     {text}
   </Button>
-))
-CTAButton.displayName = "CTAButton"
+));
+CTAButton.displayName = 'CTAButton';
 
 interface MobileMenuProps extends React.HTMLAttributes<HTMLDivElement> {
-  items: NavItem[]
-  isOpen: boolean
-  setIsOpen: (open: boolean) => void
+  items: NavItem[];
+  isOpen: boolean;
+  setIsOpen: (open: boolean) => void;
 }
 
 const MobileMenu = React.forwardRef<HTMLDivElement, MobileMenuProps>(
   ({ items, isOpen, setIsOpen, className, ...props }, ref) => (
-    <div ref={ref} className={cn("md:hidden", className)} {...props}>
+    <div ref={ref} className={cn('md:hidden', className)} {...props}>
       <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon">
-            {isOpen ? (
-              <X className="h-5 w-5" />
-            ) : (
-              <Menu className="h-5 w-5" />
-            )}
+            {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             <span className="sr-only">Toggle menu</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[200px]">
-          {items.map((item) => (
+          {items.map(item => (
             <DropdownMenuItem key={item.name}>
-              <span className="w-full">
-                {item.name}
-              </span>
+              <span className="w-full">{item.name}</span>
             </DropdownMenuItem>
           ))}
           <DropdownMenuSeparator />
@@ -141,54 +137,52 @@ const MobileMenu = React.forwardRef<HTMLDivElement, MobileMenuProps>(
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
-            <span className="w-full">
-              Sign In
-            </span>
+            <span className="w-full">Sign In</span>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <span className="w-full">
-              Get Started
-            </span>
+            <span className="w-full">Get Started</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     </div>
   )
-)
-MobileMenu.displayName = "MobileMenu"
+);
+MobileMenu.displayName = 'MobileMenu';
 
-interface HeaderActionsProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface HeaderActionsProps extends React.HTMLAttributes<HTMLDivElement> {
+  showUserMenu?: boolean;
+}
 
 const HeaderActions = React.forwardRef<HTMLDivElement, HeaderActionsProps>(
   ({ className, ...props }, ref) => {
-    const [isOpen, setIsOpen] = React.useState(false)
+    const [isOpen, setIsOpen] = React.useState(false);
 
     return (
-      <div 
+      <div
         ref={ref}
-        className={cn("flex items-center justify-end space-x-4", className)}
+        className={cn('flex items-center justify-end space-x-4', className)}
         {...props}
       >
         <ModeToggle />
         <UserMenu />
         <CTAButton text="Sell car" />
-        <MobileMenu 
+        <MobileMenu
           items={navigationItems}
           isOpen={isOpen}
           setIsOpen={setIsOpen}
         />
       </div>
-    )
+    );
   }
-)
-HeaderActions.displayName = "HeaderActions"
+);
+HeaderActions.displayName = 'HeaderActions';
 
 const Header = React.forwardRef<HTMLElement, HeaderProps>(
   ({ className, ...props }, ref) => (
-    <header 
+    <header
       ref={ref}
       className={cn(
-        "sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        'sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60',
         className
       )}
       {...props}
@@ -202,15 +196,15 @@ const Header = React.forwardRef<HTMLElement, HeaderProps>(
       </div>
     </header>
   )
-)
-Header.displayName = "Header"
+);
+Header.displayName = 'Header';
 
-export { 
-  Header, 
-  HeaderLogo, 
-  DesktopNav, 
+export {
+  Header,
+  HeaderLogo,
+  DesktopNav,
   UserMenu,
   CTAButton,
   MobileMenu,
-  HeaderActions
-}
+  HeaderActions,
+};

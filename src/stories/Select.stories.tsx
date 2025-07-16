@@ -1,6 +1,12 @@
-import React from 'react'
-import type { Meta, StoryObj } from '@storybook/react'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const meta: Meta<typeof Select> = {
   title: 'UI/Select',
@@ -9,10 +15,10 @@ const meta: Meta<typeof Select> = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   render: () => (
@@ -29,7 +35,7 @@ export const Default: Story = {
       </SelectContent>
     </Select>
   ),
-}
+};
 
 export const WithDefaultValue: Story = {
   render: () => (
@@ -46,7 +52,7 @@ export const WithDefaultValue: Story = {
       </SelectContent>
     </Select>
   ),
-}
+};
 
 export const Disabled: Story = {
   render: () => (
@@ -61,7 +67,7 @@ export const Disabled: Story = {
       </SelectContent>
     </Select>
   ),
-}
+};
 
 export const Countries: Story = {
   render: () => (
@@ -80,4 +86,4 @@ export const Countries: Story = {
       </SelectContent>
     </Select>
   ),
-} 
+};
