@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { MapPin, Navigation, ChevronDownIcon } from 'lucide-react';
 import { format } from 'date-fns';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Select,
   SelectContent,
@@ -19,14 +20,25 @@ import {
   PopoverTrigger,
 } from '@/components/ui';
 import { YearPicker } from './year-picker';
-import { cn } from '@/lib/utils';
+import { cn, formatPrice } from '@/lib/utils';
 
 interface FiltersSidebarProps {
   className?: string;
+  selectedLocation?: string;
 }
 
-export function FiltersSidebar({ className }: FiltersSidebarProps) {
+export function FiltersSidebar({
+  className,
+  selectedLocation,
+}: FiltersSidebarProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [activeTab, setActiveTab] = React.useState<'new' | 'used'>('used');
+  const [location, setLocation] = React.useState<string>(
+    selectedLocation || 'any'
+  );
+  const [radius, setRadius] = React.useState<string>('any');
   const [selectedBodyTypes, setSelectedBodyTypes] = React.useState<string[]>([
     'sedan',
     'suv',
@@ -102,8 +114,19 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
     );
   };
 
+  // Update URL when location changes
+  React.useEffect(() => {
+    const params = new URLSearchParams(searchParams);
+    if (location !== 'any') {
+      params.set('location', location);
+    } else {
+      params.delete('location');
+    }
+    router.push(`?${params.toString()}`);
+  }, [location, searchParams, router]);
+
   return (
-    <div className={cn('bg-background p-6 space-y-6', className)}>
+    <div className={cn('bg-background space-y-6', className)}>
       {/* Car Type Tabs */}
       <div className="flex gap-2">
         <Button
@@ -138,7 +161,7 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
       <div className="space-y-4">
         <h3 className="font-semibold text-sm">Location and radius</h3>
         <div className="space-y-3">
-          <Select>
+          <Select value={location} onValueChange={setLocation}>
             <SelectTrigger className="w-full">
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-muted-foreground" />
@@ -147,14 +170,17 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="any">Any location</SelectItem>
-              <SelectItem value="houston">Houston</SelectItem>
-              <SelectItem value="chicago">Chicago</SelectItem>
-              <SelectItem value="boston">Boston</SelectItem>
-              <SelectItem value="dallas">Dallas</SelectItem>
+              <SelectItem value="Houston">Houston</SelectItem>
+              <SelectItem value="Chicago">Chicago</SelectItem>
+              <SelectItem value="Boston">Boston</SelectItem>
+              <SelectItem value="Dallas">Dallas</SelectItem>
+              <SelectItem value="New York">New York</SelectItem>
+              <SelectItem value="Los Angeles">Los Angeles</SelectItem>
+              <SelectItem value="San Jose">San Jose</SelectItem>
             </SelectContent>
           </Select>
 
-          <Select>
+          <Select value={radius} onValueChange={setRadius}>
             <SelectTrigger className="w-full">
               <div className="flex items-center gap-2">
                 <Navigation className="h-4 w-4 text-muted-foreground" />
@@ -298,8 +324,8 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
               className="w-full"
             />
             <div className="flex justify-between text-xs text-muted-foreground mt-1">
-              <span>${priceRange[0].toLocaleString()}</span>
-              <span>${priceRange[1].toLocaleString()}</span>
+              <span>{formatPrice(priceRange[0])}</span>
+              <span>{formatPrice(priceRange[1])}</span>
             </div>
           </div>
 
