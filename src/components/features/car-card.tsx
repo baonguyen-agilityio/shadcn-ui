@@ -5,31 +5,10 @@ import Image from 'next/image';
 import { Heart, Bell, MapPin, Fuel, Gauge, Repeat } from 'lucide-react';
 import { Badge, Button } from '@/components/ui';
 import { Sliders } from '@/components/icons';
-import { cn } from '@/lib/utils';
-
-interface CarCardProps {
-  id: string;
-  imageUrl: string;
-  title: string;
-  year: number;
-  price: number;
-  date: string;
-  location: string;
-  mileage: string;
-  fuelType: string;
-  transmission: string;
-  badges?: Array<{
-    type: 'used' | 'verified';
-    label: string;
-  }>;
-  onFavorite?: (id: string) => void;
-  onAlert?: (id: string) => void;
-  onShare?: (id: string) => void;
-  className?: string;
-}
+import { cn, formatPrice } from '@/lib/utils';
+import { Car } from '@/lib/api';
 
 export function CarCard({
-  id,
   imageUrl,
   title,
   year,
@@ -40,27 +19,11 @@ export function CarCard({
   fuelType,
   transmission,
   badges = [],
-  onFavorite,
-  onAlert,
-  onShare,
-  className,
-}: CarCardProps) {
-  const [isFavorited, setIsFavorited] = React.useState(false);
-
-  const handleFavorite = () => {
-    setIsFavorited(!isFavorited);
-    onFavorite?.(id);
-  };
-
-  const formatPrice = (price: number) => {
-    return `$${price.toLocaleString()}`;
-  };
-
+}: Car) {
   return (
     <div
       className={cn(
-        'bg-card rounded-md overflow-hidden hover:shadow-lg transition-all duration-200',
-        className
+        'bg-card rounded-md overflow-hidden hover:shadow-lg transition-all duration-200'
       )}
     >
       {/* Image Container */}
@@ -101,20 +64,13 @@ export function CarCard({
               variant="ghost"
               size="icon"
               className="h-8 w-8 rounded-full border border-border"
-              onClick={handleFavorite}
             >
-              <Heart
-                className={cn(
-                  'h-2 w-2 transition-colors',
-                  isFavorited ? 'fill-red-500 text-red-500' : 'text-[#333D4C]'
-                )}
-              />
+              <Heart className={cn('h-2 w-2 transition-colors')} />
             </Button>
             <Button
               variant="ghost"
               size="icon"
               className="h-8 w-8 rounded-full border border-border"
-              onClick={() => onAlert?.(id)}
             >
               <Bell className="h-2 w-2 text-[#333D4C]" />
             </Button>
@@ -122,7 +78,6 @@ export function CarCard({
               variant="ghost"
               size="icon"
               className="h-8 w-8 rounded-full border border-border"
-              onClick={() => onShare?.(id)}
             >
               <Repeat className="h-2 w-2 text-[#333D4C]" />
             </Button>
