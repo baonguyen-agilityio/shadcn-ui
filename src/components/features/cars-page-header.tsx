@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { PageHeader } from '@/components/features';
 import { Filter } from '@/components/features';
+import { useFilters } from '@/lib/hooks';
 
 interface CarsPageHeaderProps {
   breadcrumbs: Array<{ label: string; href?: string }>;
@@ -15,15 +16,13 @@ export function CarsPageHeader({
   resultCount,
   initialFilters = [],
 }: CarsPageHeaderProps) {
+  const { removeFilter, clearAllFilters } = useFilters();
   const [filters, setFilters] = React.useState<Filter[]>(initialFilters);
 
-  const handleRemoveFilter = (filterId: string) => {
-    setFilters(filters.filter(f => f.id !== filterId));
-  };
-
-  const handleClearAll = () => {
-    setFilters([]);
-  };
+  // Update filters when they change from parent
+  React.useEffect(() => {
+    setFilters(initialFilters);
+  }, [initialFilters]);
 
   return (
     <div className="sticky top-16 z-40">
@@ -31,8 +30,8 @@ export function CarsPageHeader({
         breadcrumbs={breadcrumbs}
         filters={filters}
         resultCount={resultCount}
-        onRemoveFilter={handleRemoveFilter}
-        onClearAll={handleClearAll}
+        onRemoveFilter={removeFilter}
+        onClearAll={clearAllFilters}
       />
     </div>
   );
