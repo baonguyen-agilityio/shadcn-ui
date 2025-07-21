@@ -1,4 +1,5 @@
 export * from './active-filters';
+export * from './filter-loading-indicator';
 export * from './car-card';
 export * from './cars-listing-client';
 export * from './cars-page-header';
