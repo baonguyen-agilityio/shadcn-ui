@@ -19,36 +19,56 @@ import {
   PopoverTrigger,
 } from '@/components/ui';
 import { YearPicker } from './year-picker';
-import { cn } from '@/lib/utils';
+import { FilterLoadingIndicator } from './filter-loading-indicator';
+import { cn, formatPrice } from '@/lib/utils';
+import { useFilters } from '@/lib/hooks';
 
 interface FiltersSidebarProps {
   className?: string;
 }
 
 export function FiltersSidebar({ className }: FiltersSidebarProps) {
+  const { filters, updateFilters, isDebouncing } = useFilters();
   const [activeTab, setActiveTab] = React.useState<'new' | 'used'>('used');
-  const [selectedBodyTypes, setSelectedBodyTypes] = React.useState<string[]>([
-    'sedan',
-    'suv',
-    'coupe',
-  ]);
-  const [selectedDrivetrains, setSelectedDrivetrains] = React.useState<
-    string[]
-  >([]);
-  const [selectedFuelTypes, setSelectedFuelTypes] = React.useState<string[]>(
-    []
-  );
-  const [priceRange, setPriceRange] = React.useState([17000, 120000]);
   const [negotiatedPrice, setNegotiatedPrice] = React.useState(false);
-  const [yearFrom, setYearFrom] = React.useState<Date | undefined>();
-  const [yearTo, setYearTo] = React.useState<Date | undefined>();
+
+  // Local state for smooth interactions
+  const [localPriceRange, setLocalPriceRange] = React.useState<
+    [number, number]
+  >(filters.priceRange);
+  const [localBodyTypes, setLocalBodyTypes] = React.useState<string[]>(
+    filters.selectedBodyTypes
+  );
+  const [localDrivetrains, setLocalDrivetrains] = React.useState<string[]>(
+    filters.selectedDrivetrains
+  );
+  const [localFuelTypes, setLocalFuelTypes] = React.useState<string[]>(
+    filters.selectedFuelTypes
+  );
+  const [localMake, setLocalMake] = React.useState(filters.selectedMake);
+  const [localModel, setLocalModel] = React.useState(filters.selectedModel);
+  const [location, setLocation] = React.useState(filters.location);
+  const [isDragging, setIsDragging] = React.useState(false);
+
+  // Sync local state with filters
+  React.useEffect(() => {
+    if (!isDragging) {
+      setLocalPriceRange(filters.priceRange);
+    }
+    setLocalBodyTypes(filters.selectedBodyTypes);
+    setLocalDrivetrains(filters.selectedDrivetrains);
+    setLocalFuelTypes(filters.selectedFuelTypes);
+    setLocalMake(filters.selectedMake);
+    setLocalModel(filters.selectedModel);
+    setLocation(filters.location);
+  }, [filters, isDragging]);
 
   const bodyTypes = [
-    { id: 'sedan', label: 'Sedan' },
-    { id: 'suv', label: 'SUV' },
-    { id: 'wagon', label: 'Wagon' },
-    { id: 'crossover', label: 'Crossover' },
-    { id: 'coupe', label: 'Coupe' },
+    { id: 'Sedan', label: 'Sedan' },
+    { id: 'SUV', label: 'SUV' },
+    { id: 'Wagon', label: 'Wagon' },
+    { id: 'Crossover', label: 'Crossover' },
+    { id: 'Coupe', label: 'Coupe' },
     { id: 'pickup', label: 'Pickup' },
     { id: 'hatchback', label: 'Hatchback' },
     { id: 'convertible', label: 'Convertible' },
@@ -67,43 +87,97 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
   ];
 
   const drivetrains = [
-    { id: 'awd', label: 'AWD/4WD' },
-    { id: 'fwd', label: 'Front Wheel Drive' },
-    { id: 'rwd', label: 'Rear Wheel Drive' },
+    { id: 'AWD/4WD', label: 'AWD/4WD' },
+    { id: 'FWD', label: 'Front Wheel Drive' },
+    { id: 'RWD', label: 'Rear Wheel Drive' },
   ];
 
   const fuelTypes = [
-    { id: 'gasoline', label: 'Gasoline' },
-    { id: 'diesel', label: 'Diesel' },
-    { id: 'electric', label: 'Electric' },
+    { id: 'Petrol', label: 'Petrol' },
+    { id: 'Diesel', label: 'Diesel' },
+    { id: 'Electric', label: 'Electric' },
+    { id: 'Hybrid', label: 'Hybrid' },
   ];
 
   const toggleBodyType = (bodyType: string) => {
-    setSelectedBodyTypes(prev =>
-      prev.includes(bodyType)
-        ? prev.filter(type => type !== bodyType)
-        : [...prev, bodyType]
-    );
+    const newBodyTypes = localBodyTypes.includes(bodyType)
+      ? localBodyTypes.filter(type => type !== bodyType)
+      : [...localBodyTypes, bodyType];
+
+    setLocalBodyTypes(newBodyTypes);
+    updateFilters({ selectedBodyTypes: newBodyTypes }, { debounce: true });
   };
 
   const toggleDrivetrain = (drivetrain: string) => {
-    setSelectedDrivetrains(prev =>
-      prev.includes(drivetrain)
-        ? prev.filter(type => type !== drivetrain)
-        : [...prev, drivetrain]
-    );
+    const newDrivetrains = localDrivetrains.includes(drivetrain)
+      ? localDrivetrains.filter(type => type !== drivetrain)
+      : [...localDrivetrains, drivetrain];
+
+    setLocalDrivetrains(newDrivetrains);
+    updateFilters({ selectedDrivetrains: newDrivetrains }, { debounce: true });
   };
 
   const toggleFuelType = (fuelType: string) => {
-    setSelectedFuelTypes(prev =>
-      prev.includes(fuelType)
-        ? prev.filter(type => type !== fuelType)
-        : [...prev, fuelType]
-    );
+    const newFuelTypes = localFuelTypes.includes(fuelType)
+      ? localFuelTypes.filter(type => type !== fuelType)
+      : [...localFuelTypes, fuelType];
+
+    setLocalFuelTypes(newFuelTypes);
+    updateFilters({ selectedFuelTypes: newFuelTypes }, { debounce: true });
+  };
+
+  // Handle slider value change during drag
+  const handleSliderChange = (value: number[]) => {
+    setLocalPriceRange(value as [number, number]);
+  };
+
+  // Handle slider drag end
+  const handleSliderDragEnd = () => {
+    setIsDragging(false);
+    updateFilters({ priceRange: localPriceRange }, { debounce: true });
+  };
+
+  // Handle price input changes
+  const handlePriceInputChange = (index: 0 | 1, value: string) => {
+    const numValue = Number(value.replace(/[^0-9]/g, ''));
+    if (isNaN(numValue)) return;
+
+    const newRange: [number, number] = [...localPriceRange] as [number, number];
+    newRange[index] = Math.max(0, Math.min(200000, numValue));
+
+    // Ensure min doesn't exceed max and vice versa
+    if (index === 0 && newRange[0] > newRange[1]) {
+      newRange[1] = newRange[0];
+    } else if (index === 1 && newRange[1] < newRange[0]) {
+      newRange[0] = newRange[1];
+    }
+
+    setLocalPriceRange(newRange);
+    updateFilters({ priceRange: newRange }, { debounce: true });
+  };
+
+  const handleLocationChange = (value: string) => {
+    setLocation(value);
+    updateFilters({ location: value }, { debounce: true });
+  };
+
+  // Handle make change with immediate local update and debounced API call
+  const handleMakeChange = (value: string) => {
+    setLocalMake(value);
+    updateFilters({ selectedMake: value }, { debounce: true });
+  };
+
+  // Handle model change with immediate local update and debounced API call
+  const handleModelChange = (value: string) => {
+    setLocalModel(value);
+    updateFilters({ selectedModel: value }, { debounce: true });
   };
 
   return (
-    <div className={cn('bg-background p-6 space-y-6', className)}>
+    <div className={cn('bg-background space-y-6', className)}>
+      {/* Loading Indicator */}
+      <FilterLoadingIndicator isDebouncing={isDebouncing} />
+
       {/* Car Type Tabs */}
       <div className="flex gap-2">
         <Button
@@ -138,7 +212,7 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
       <div className="space-y-4">
         <h3 className="font-semibold text-sm">Location and radius</h3>
         <div className="space-y-3">
-          <Select>
+          <Select value={location} onValueChange={handleLocationChange}>
             <SelectTrigger className="w-full">
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-muted-foreground" />
@@ -147,14 +221,20 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="any">Any location</SelectItem>
-              <SelectItem value="houston">Houston</SelectItem>
-              <SelectItem value="chicago">Chicago</SelectItem>
-              <SelectItem value="boston">Boston</SelectItem>
-              <SelectItem value="dallas">Dallas</SelectItem>
+              <SelectItem value="Houston">Houston</SelectItem>
+              <SelectItem value="Chicago">Chicago</SelectItem>
+              <SelectItem value="Boston">Boston</SelectItem>
+              <SelectItem value="Dallas">Dallas</SelectItem>
+              <SelectItem value="New York">New York</SelectItem>
+              <SelectItem value="Los Angeles">Los Angeles</SelectItem>
+              <SelectItem value="San Jose">San Jose</SelectItem>
             </SelectContent>
           </Select>
 
-          <Select>
+          <Select
+            value={filters.radius}
+            onValueChange={value => updateFilters({ radius: value })}
+          >
             <SelectTrigger className="w-full">
               <div className="flex items-center gap-2">
                 <Navigation className="h-4 w-4 text-muted-foreground" />
@@ -188,7 +268,7 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
               <div key={bodyType.id} className="flex items-center space-x-2">
                 <Checkbox
                   id={bodyType.id}
-                  checked={selectedBodyTypes.includes(bodyType.id)}
+                  checked={localBodyTypes.includes(bodyType.id)}
                   onCheckedChange={() => toggleBodyType(bodyType.id)}
                 />
                 <label htmlFor={bodyType.id} className="text-sm cursor-pointer">
@@ -211,15 +291,20 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
                 variant="outline"
                 className={cn(
                   'flex-1 justify-between text-left font-normal',
-                  !yearFrom && 'text-muted-foreground'
+                  !filters.yearFrom && 'text-muted-foreground'
                 )}
               >
-                {yearFrom ? format(yearFrom, 'yyyy') : 'From'}
+                {filters.yearFrom ? format(filters.yearFrom, 'yyyy') : 'From'}
                 <ChevronDownIcon />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
-              <YearPicker selected={yearFrom} onSelect={setYearFrom} />
+              <YearPicker
+                selected={filters.yearFrom}
+                onSelect={date =>
+                  updateFilters({ yearFrom: date }, { debounce: true })
+                }
+              />
             </PopoverContent>
           </Popover>
 
@@ -232,15 +317,20 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
                 variant="outline"
                 className={cn(
                   'flex-1 justify-between text-left font-normal',
-                  !yearTo && 'text-muted-foreground'
+                  !filters.yearTo && 'text-muted-foreground'
                 )}
               >
-                {yearTo ? format(yearTo, 'yyyy') : 'To'}
+                {filters.yearTo ? format(filters.yearTo, 'yyyy') : 'To'}
                 <ChevronDownIcon />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
-              <YearPicker selected={yearTo} onSelect={setYearTo} />
+              <YearPicker
+                selected={filters.yearTo}
+                onSelect={date =>
+                  updateFilters({ yearTo: date }, { debounce: true })
+                }
+              />
             </PopoverContent>
           </Popover>
         </div>
@@ -250,34 +340,34 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
       <div className="space-y-4">
         <h3 className="font-semibold text-sm">Make and model</h3>
         <div className="space-y-3">
-          <Select>
+          <Select value={localMake} onValueChange={handleMakeChange}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Any make" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="any">Any make</SelectItem>
-              <SelectItem value="volvo">Volvo</SelectItem>
-              <SelectItem value="porsche">Porsche</SelectItem>
-              <SelectItem value="ford">Ford</SelectItem>
-              <SelectItem value="mercedes">Mercedes-Benz</SelectItem>
-              <SelectItem value="maserati">Maserati</SelectItem>
-              <SelectItem value="tesla">Tesla</SelectItem>
-              <SelectItem value="toyota">Toyota</SelectItem>
-              <SelectItem value="mitsubishi">Mitsubishi</SelectItem>
+              <SelectItem value="Volvo">Volvo</SelectItem>
+              <SelectItem value="Porsche">Porsche</SelectItem>
+              <SelectItem value="Ford">Ford</SelectItem>
+              <SelectItem value="Mercedes-Benz">Mercedes-Benz</SelectItem>
+              <SelectItem value="Maserati">Maserati</SelectItem>
+              <SelectItem value="Tesla">Tesla</SelectItem>
+              <SelectItem value="Toyota">Toyota</SelectItem>
+              <SelectItem value="Mitsubishi">Mitsubishi</SelectItem>
             </SelectContent>
           </Select>
 
-          <Select>
+          <Select value={localModel} onValueChange={handleModelChange}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Any model" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="any">Any model</SelectItem>
-              <SelectItem value="xc90">XC90</SelectItem>
+              <SelectItem value="XC90">XC90</SelectItem>
               <SelectItem value="911">911</SelectItem>
-              <SelectItem value="f150">F-150</SelectItem>
-              <SelectItem value="a205">A205</SelectItem>
-              <SelectItem value="model3">Model 3</SelectItem>
+              <SelectItem value="F-150">F-150</SelectItem>
+              <SelectItem value="A205">A205</SelectItem>
+              <SelectItem value="Model 3">Model 3</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -290,17 +380,27 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
           {/* Price Range Slider */}
           <div className="px-3">
             <Slider
-              value={priceRange}
-              onValueChange={setPriceRange}
+              value={localPriceRange}
+              onValueChange={handleSliderChange}
+              onValueCommit={handleSliderDragEnd}
               max={200000}
               min={0}
               step={1000}
               className="w-full"
             />
             <div className="flex justify-between text-xs text-muted-foreground mt-1">
-              <span>${priceRange[0].toLocaleString()}</span>
-              <span>${priceRange[1].toLocaleString()}</span>
+              <span className={cn(isDragging && 'text-primary font-medium')}>
+                {formatPrice(localPriceRange[0])}
+              </span>
+              <span className={cn(isDragging && 'text-primary font-medium')}>
+                {formatPrice(localPriceRange[1])}
+              </span>
             </div>
+            {isDragging && (
+              <div className="text-xs text-primary mt-1 text-center">
+                Release to apply filter
+              </div>
+            )}
           </div>
 
           {/* Price Input Fields */}
@@ -312,12 +412,12 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
                 </span>
                 <Input
                   type="number"
-                  value={priceRange[0]}
+                  value={localPriceRange[0]}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setPriceRange([Number(e.target.value), priceRange[1]])
+                    handlePriceInputChange(0, e.target.value)
                   }
                   className="pl-6"
-                  placeholder="17000"
+                  placeholder="0"
                 />
               </div>
             </div>
@@ -329,9 +429,9 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
                 </span>
                 <Input
                   type="number"
-                  value={priceRange[1]}
+                  value={localPriceRange[1]}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setPriceRange([priceRange[0], Number(e.target.value)])
+                    handlePriceInputChange(1, e.target.value)
                   }
                   className="pl-6"
                   placeholder="120000"
@@ -365,7 +465,7 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
             <div key={drivetrain.id} className="flex items-center space-x-2">
               <Checkbox
                 id={`drivetrain-${drivetrain.id}`}
-                checked={selectedDrivetrains.includes(drivetrain.id)}
+                checked={localDrivetrains.includes(drivetrain.id)}
                 onCheckedChange={() => toggleDrivetrain(drivetrain.id)}
               />
               <label
@@ -387,7 +487,7 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
             <div key={fuelType.id} className="flex items-center space-x-2">
               <Checkbox
                 id={`fuel-${fuelType.id}`}
-                checked={selectedFuelTypes.includes(fuelType.id)}
+                checked={localFuelTypes.includes(fuelType.id)}
                 onCheckedChange={() => toggleFuelType(fuelType.id)}
               />
               <label

@@ -37,7 +37,7 @@ export function PageHeader({
   return (
     <div className={cn('bg-background border-b', className)}>
       {/* Breadcrumb Navigation */}
-      <div className="container mx-auto px-6 py-4">
+      <div className="container mx-auto py-4">
         <Breadcrumb>
           <BreadcrumbList>
             {breadcrumbs.map((item, index) => (
@@ -61,7 +61,7 @@ export function PageHeader({
       {/* Active Filters - Full Width */}
       {filters.length > 0 && onRemoveFilter && onClearAll && (
         <div className="w-full">
-          <div className="container mx-auto px-6 py-4">
+          <div className="container mx-auto py-4">
             <ActiveFilters
               filters={filters}
               resultCount={resultCount}
