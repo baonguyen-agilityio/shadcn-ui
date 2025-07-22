@@ -24,6 +24,7 @@ interface PageHeaderProps {
   onRemoveFilter?: (filterId: string) => void;
   onClearAll?: () => void;
   className?: string;
+  isPending?: boolean;
 }
 
 export function PageHeader({
@@ -33,6 +34,7 @@ export function PageHeader({
   onRemoveFilter,
   onClearAll,
   className,
+  isPending = false,
 }: PageHeaderProps) {
   return (
     <div className={cn('bg-background border-b', className)}>
@@ -67,6 +69,7 @@ export function PageHeader({
               resultCount={resultCount}
               onRemoveFilter={onRemoveFilter}
               onClearAll={onClearAll}
+              isPending={isPending}
             />
           </div>
         </div>

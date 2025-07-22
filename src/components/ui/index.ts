@@ -10,6 +10,7 @@ export * from './dropdown-menu';
 export * from './input';
 export * from './pagination';
 export * from './popover';
+export * from './resizable';
 export * from './select';
 export * from './skeleton';
 export * from './slider';

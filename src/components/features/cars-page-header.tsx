@@ -16,7 +16,7 @@ export function CarsPageHeader({
   resultCount,
   initialFilters = [],
 }: CarsPageHeaderProps) {
-  const { removeFilter, clearAllFilters } = useFilters();
+  const { removeFilter, clearAllFilters, isPending } = useFilters();
   const [filters, setFilters] = React.useState<Filter[]>(initialFilters);
 
   // Update filters when they change from parent
@@ -32,6 +32,7 @@ export function CarsPageHeader({
         resultCount={resultCount}
         onRemoveFilter={removeFilter}
         onClearAll={clearAllFilters}
+        isPending={isPending}
       />
     </div>
   );

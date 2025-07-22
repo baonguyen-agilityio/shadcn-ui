@@ -1,5 +1,4 @@
 export * from './active-filters';
-export * from './filter-loading-indicator';
 export * from './car-card';
 export * from './cars-listing-client';
 export * from './cars-page-header';
@@ -7,4 +6,5 @@ export * from './filters-sidebar';
 export * from './listing-grid';
 export * from './mode-toggle';
 export * from './page-header';
+export * from './resizable-layout';
 export * from './year-picker';
