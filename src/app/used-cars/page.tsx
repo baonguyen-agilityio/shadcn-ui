@@ -2,6 +2,7 @@ import {
   FiltersSidebar,
   CarsListingClient,
   CarsPageHeader,
+  ResizableLayout,
 } from '@/components/features';
 import { carApi, convertStrapiCarToCar } from '@/lib/api';
 import { PAGINATION } from '@/lib/constants';
@@ -64,22 +65,17 @@ export default async function UsedCarsPage({
         />
 
         {/* Main Content Area */}
-        <div className="container mx-auto py-6">
-          <div className="flex gap-12">
-            {/* Filters Sidebar */}
-            <div className="w-80 shrink-0">
-              <FiltersSidebar />
-            </div>
-
-            {/* Listing Grid */}
-            <div className="flex-1 min-w-0">
+        <div className="container mx-auto px-4 py-4 sm:px-6 lg:px-8 lg:py-6">
+          <ResizableLayout
+            sidebar={<FiltersSidebar />}
+            content={
               <CarsListingClient
                 cars={carsData}
                 currentPage={currentPage}
                 totalPages={totalPages}
               />
-            </div>
-          </div>
+            }
+          />
         </div>
       </Suspense>
     </div>

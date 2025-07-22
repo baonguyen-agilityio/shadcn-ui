@@ -17,6 +17,7 @@ interface ActiveFiltersProps {
   onRemoveFilter: (filterId: string) => void;
   onClearAll: () => void;
   className?: string;
+  isPending?: boolean;
 }
 
 export function ActiveFilters({
@@ -25,6 +26,7 @@ export function ActiveFilters({
   onRemoveFilter,
   onClearAll,
   className,
+  isPending = false,
 }: ActiveFiltersProps) {
   if (filters.length === 0) {
     return null;
@@ -45,13 +47,17 @@ export function ActiveFilters({
           <Badge
             key={filter.id}
             variant="secondary"
-            className="flex items-center gap-1 px-3 py-1 text-sm"
+            className={cn(
+              'flex items-center gap-1 px-3 py-1 text-sm',
+              isPending && 'opacity-50'
+            )}
           >
             <Button
               variant="ghost"
               className="h-auto p-0 hover:bg-transparent"
-              onClick={() => onRemoveFilter(filter.id)}
+              onClick={() => !isPending && onRemoveFilter(filter.id)}
               aria-label={`Remove ${filter.label} filter`}
+              disabled={isPending}
             >
               <X size={16} />
             </Button>
@@ -63,8 +69,12 @@ export function ActiveFilters({
       {filters.length > 0 && (
         <Button
           variant="link"
-          onClick={onClearAll}
-          className="h-auto px-0 py-0 text-sm text-muted-foreground hover:text-foreground"
+          onClick={() => !isPending && onClearAll()}
+          className={cn(
+            'h-auto px-0 py-0 text-sm text-muted-foreground hover:text-foreground',
+            isPending && 'opacity-50'
+          )}
+          disabled={isPending}
         >
           Clear all
         </Button>
