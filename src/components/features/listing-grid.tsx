@@ -54,10 +54,8 @@ export function ListingGrid({
       const params = new URLSearchParams(searchParams);
 
       if (page === 1) {
-        // Remove page parameter for first page (default)
         params.delete(URL_PARAMS.PAGE);
       } else {
-        // Set page parameter for other pages
         params.set(URL_PARAMS.PAGE, page.toString());
       }
 

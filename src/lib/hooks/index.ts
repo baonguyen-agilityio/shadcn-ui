@@ -1,1 +1,1 @@
-export * from './use-filters';
+export { useCarFilter } from './use-car-filter';

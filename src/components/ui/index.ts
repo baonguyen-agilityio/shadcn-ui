@@ -12,7 +12,7 @@ export * from './pagination';
 export * from './popover';
 export * from './resizable';
 export * from './select';
-export * from './skeleton';
+export { Skeleton, CarCardSkeleton } from './skeleton';
 export * from './slider';
 export * from './switch';
 export * from './typography';

@@ -1,12 +1,10 @@
 'use client';
 
-import * as React from 'react';
-import { MapPin, Navigation, ChevronDownIcon } from 'lucide-react';
-import { format } from 'date-fns';
+import { useState } from 'react';
 import {
   Select,
-  SelectContent,
   SelectItem,
+  SelectContent,
   SelectTrigger,
   SelectValue,
   Button,
@@ -18,53 +16,61 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui';
-import { YearPicker } from './year-picker';
 import { cn } from '@/lib/utils';
-import { useFilters } from '@/lib/hooks';
+import { MapPin, Navigation, ChevronDownIcon } from 'lucide-react';
+import { YearPicker } from './year-picker';
+import React from 'react';
 
 interface FiltersSidebarProps {
-  className?: string;
+  carType?: 'new' | 'used';
+  currentLocation?: string;
+  currentMake?: string;
+  currentModel?: string;
+  currentBodyTypes?: string[];
+  currentDrivetrains?: string[];
+  currentFuelTypes?: string[];
+  onLocationChange?: (location: string) => void;
+  onMakeChange?: (make: string) => void;
+  onModelChange?: (model: string) => void;
+  isPending?: boolean;
+  onBodyTypeChange?: (bodyTypes: string[]) => void;
+  onDrivetrainChange?: (drivetrains: string[]) => void;
+  onFuelTypeChange?: (fuelTypes: string[]) => void;
 }
 
-export function FiltersSidebar({ className }: FiltersSidebarProps) {
-  const { filters, updateFilters, isPending } = useFilters();
-  const [activeTab, setActiveTab] = React.useState<'new' | 'used'>('used');
-  const [negotiatedPrice, setNegotiatedPrice] = React.useState(false);
+export function FiltersSidebar({
+  carType = 'new',
+  currentLocation = 'any',
+  currentMake = 'any',
+  currentModel = 'any',
+  currentBodyTypes = [],
+  currentDrivetrains = [],
+  currentFuelTypes = [],
+  onLocationChange,
+  onMakeChange,
+  onModelChange,
+  isPending = false,
+  onBodyTypeChange,
+  onDrivetrainChange,
+  onFuelTypeChange,
+}: FiltersSidebarProps) {
+  const [activeTab, setActiveTab] = useState<'new' | 'used'>(carType);
+  const [negotiatedPrice, setNegotiatedPrice] = useState(false);
+  const [localPriceRange, setLocalPriceRange] = useState<[number, number]>([
+    0, 120000,
+  ]);
+  const [selectedBodyTypes, setSelectedBodyTypes] =
+    useState<string[]>(currentBodyTypes);
+  const [selectedDrivetrains, setSelectedDrivetrains] =
+    useState<string[]>(currentDrivetrains);
+  const [selectedFuelTypes, setSelectedFuelTypes] =
+    useState<string[]>(currentFuelTypes);
 
-  // Local state for smooth interactions
-  const [localPriceRange, setLocalPriceRange] = React.useState<
-    [number, number]
-  >(filters.priceRange);
-  const [localBodyTypes, setLocalBodyTypes] = React.useState<string[]>(
-    filters.selectedBodyTypes
-  );
-  const [localDrivetrains, setLocalDrivetrains] = React.useState<string[]>(
-    filters.selectedDrivetrains
-  );
-  const [localFuelTypes, setLocalFuelTypes] = React.useState<string[]>(
-    filters.selectedFuelTypes
-  );
-  const [localMake, setLocalMake] = React.useState(
-    filters.selectedMake || 'any'
-  );
-  const [localModel, setLocalModel] = React.useState(
-    filters.selectedModel || 'any'
-  );
-  const [location, setLocation] = React.useState(filters.location);
-  const [isDragging, setIsDragging] = React.useState(false);
-
-  // Sync local state with filters
   React.useEffect(() => {
-    if (!isDragging) {
-      setLocalPriceRange(filters.priceRange);
-    }
-    setLocalBodyTypes(filters.selectedBodyTypes);
-    setLocalDrivetrains(filters.selectedDrivetrains);
-    setLocalFuelTypes(filters.selectedFuelTypes);
-    setLocalMake(filters.selectedMake || 'any');
-    setLocalModel(filters.selectedModel || 'any');
-    setLocation(filters.location);
-  }, [filters, isDragging]);
+    setSelectedBodyTypes(currentBodyTypes);
+    setSelectedDrivetrains(currentDrivetrains);
+    setSelectedFuelTypes(currentFuelTypes);
+  }, [currentBodyTypes, currentDrivetrains, currentFuelTypes]);
 
   const bodyTypes = [
     { id: 'Sedan', label: 'Sedan' },
@@ -103,45 +109,40 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
   ];
 
   const toggleBodyType = (bodyType: string) => {
-    const newBodyTypes = localBodyTypes.includes(bodyType)
-      ? localBodyTypes.filter(bt => bt !== bodyType)
-      : [...localBodyTypes, bodyType];
-    setLocalBodyTypes(newBodyTypes);
-    updateFilters({ selectedBodyTypes: newBodyTypes });
+    const newBodyTypes = selectedBodyTypes.includes(bodyType)
+      ? selectedBodyTypes.filter(bt => bt !== bodyType)
+      : [...selectedBodyTypes, bodyType];
+    setSelectedBodyTypes(newBodyTypes);
+    onBodyTypeChange?.(newBodyTypes);
   };
 
   const toggleDrivetrain = (drivetrain: string) => {
-    const newDrivetrains = localDrivetrains.includes(drivetrain)
-      ? localDrivetrains.filter(dt => dt !== drivetrain)
-      : [...localDrivetrains, drivetrain];
-    setLocalDrivetrains(newDrivetrains);
-    updateFilters({ selectedDrivetrains: newDrivetrains });
+    const newDrivetrains = selectedDrivetrains.includes(drivetrain)
+      ? selectedDrivetrains.filter(dt => dt !== drivetrain)
+      : [...selectedDrivetrains, drivetrain];
+    setSelectedDrivetrains(newDrivetrains);
+    onDrivetrainChange?.(newDrivetrains);
   };
 
   const toggleFuelType = (fuelType: string) => {
-    const newFuelTypes = localFuelTypes.includes(fuelType)
-      ? localFuelTypes.filter(ft => ft !== fuelType)
-      : [...localFuelTypes, fuelType];
-    setLocalFuelTypes(newFuelTypes);
-    updateFilters({ selectedFuelTypes: newFuelTypes });
+    const newFuelTypes = selectedFuelTypes.includes(fuelType)
+      ? selectedFuelTypes.filter(ft => ft !== fuelType)
+      : [...selectedFuelTypes, fuelType];
+    setSelectedFuelTypes(newFuelTypes);
+    onFuelTypeChange?.(newFuelTypes);
   };
 
   const handleSliderChange = (value: number[]) => {
     setLocalPriceRange([value[0], value[1]]);
-    setIsDragging(true);
   };
 
-  const handleSliderDragEnd = () => {
-    setIsDragging(false);
-    updateFilters({ priceRange: localPriceRange });
-  };
+  const handleSliderDragEnd = () => {};
 
   const handlePriceInputChange = (index: 0 | 1, value: string) => {
     const numValue = value === '' ? 0 : parseInt(value, 10);
     const newRange: [number, number] = [...localPriceRange] as [number, number];
     newRange[index] = numValue;
 
-    // Ensure min doesn't exceed max
     if (index === 0 && numValue > newRange[1]) {
       newRange[1] = numValue;
     }
@@ -150,37 +151,16 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
     }
 
     setLocalPriceRange(newRange);
-    updateFilters({ priceRange: newRange });
-  };
-
-  const handleLocationChange = (value: string) => {
-    setLocation(value);
-    updateFilters({ location: value });
-  };
-
-  const handleMakeChange = (value: string) => {
-    const makeValue = value === 'any' ? '' : value;
-    setLocalMake(value);
-    setLocalModel('any');
-    updateFilters({ selectedMake: makeValue, selectedModel: '' });
-  };
-
-  const handleModelChange = (value: string) => {
-    const modelValue = value === 'any' ? '' : value;
-    setLocalModel(value);
-    updateFilters({ selectedModel: modelValue });
   };
 
   return (
-    <div className={cn('space-y-6 p-4 sm:p-6 relative', className)}>
-      {/* Loading Overlay for isPending */}
+    <div className="space-y-6 relative">
       {isPending && (
         <div className="absolute inset-0 bg-white/50 flex items-center justify-center z-10 rounded-lg">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
         </div>
       )}
 
-      {/* Car Type Tabs */}
       <div className="flex gap-2">
         <Button
           variant="outline"
@@ -210,11 +190,10 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
         </Button>
       </div>
 
-      {/* Location and Radius */}
       <div className="space-y-3 sm:space-y-4">
         <h3 className="font-semibold text-sm">Location and radius</h3>
         <div className="space-y-2 sm:space-y-3">
-          <Select value={location} onValueChange={handleLocationChange}>
+          <Select value={currentLocation} onValueChange={onLocationChange}>
             <SelectTrigger className="w-full">
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-muted-foreground" />
@@ -229,14 +208,10 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
               <SelectItem value="Dallas">Dallas</SelectItem>
               <SelectItem value="New York">New York</SelectItem>
               <SelectItem value="Los Angeles">Los Angeles</SelectItem>
-              <SelectItem value="San Jose">San Jose</SelectItem>
             </SelectContent>
           </Select>
 
-          <Select
-            value={filters.radius}
-            onValueChange={value => updateFilters({ radius: value })}
-          >
+          <Select defaultValue="any">
             <SelectTrigger className="w-full">
               <div className="flex items-center gap-2">
                 <Navigation className="h-4 w-4 text-muted-foreground" />
@@ -254,7 +229,6 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
         </div>
       </div>
 
-      {/* Body Type */}
       <div className="space-y-3 sm:space-y-4">
         <h3 className="font-semibold text-sm">Body type</h3>
         <div className="relative">
@@ -270,7 +244,7 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
               <div key={bodyType.id} className="flex items-center space-x-2">
                 <Checkbox
                   id={bodyType.id}
-                  checked={localBodyTypes.includes(bodyType.id)}
+                  checked={selectedBodyTypes.includes(bodyType.id)}
                   onCheckedChange={() => toggleBodyType(bodyType.id)}
                 />
                 <label
@@ -285,11 +259,10 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
         </div>
       </div>
 
-      {/* Make and Model */}
       <div className="space-y-3 sm:space-y-4">
         <h3 className="font-semibold text-sm">Make and model</h3>
         <div className="space-y-2 sm:space-y-3">
-          <Select value={localMake} onValueChange={handleMakeChange}>
+          <Select value={currentMake} onValueChange={onMakeChange}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Any make" />
             </SelectTrigger>
@@ -307,7 +280,7 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
             </SelectContent>
           </Select>
 
-          <Select value={localModel} onValueChange={handleModelChange}>
+          <Select value={currentModel} onValueChange={onModelChange}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Any model" />
             </SelectTrigger>
@@ -327,30 +300,25 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
         </div>
       </div>
 
-      {/* Year Range */}
       <div className="space-y-3 sm:space-y-4">
         <h3 className="font-semibold text-sm">Year range</h3>
         <div className="space-y-2 sm:space-y-3">
           <div className="flex gap-2">
-            {/* From Year */}
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   className={cn(
                     'flex-1 justify-between text-left font-normal text-xs sm:text-sm',
-                    !filters.yearFrom && 'text-muted-foreground'
+                    'text-muted-foreground'
                   )}
                 >
-                  {filters.yearFrom ? format(filters.yearFrom, 'yyyy') : 'From'}
+                  From
                   <ChevronDownIcon className="h-3 w-3" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
-                <YearPicker
-                  selected={filters.yearFrom}
-                  onSelect={date => updateFilters({ yearFrom: date })}
-                />
+                <YearPicker selected={undefined} onSelect={() => {}} />
               </PopoverContent>
             </Popover>
 
@@ -358,32 +326,27 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
               -
             </span>
 
-            {/* To Year */}
             <Popover>
               <PopoverTrigger asChild>
                 <Button
                   variant="outline"
                   className={cn(
                     'flex-1 justify-between text-left font-normal text-xs sm:text-sm',
-                    !filters.yearTo && 'text-muted-foreground'
+                    'text-muted-foreground'
                   )}
                 >
-                  {filters.yearTo ? format(filters.yearTo, 'yyyy') : 'To'}
+                  To
                   <ChevronDownIcon className="h-3 w-3" />
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
-                <YearPicker
-                  selected={filters.yearTo}
-                  onSelect={date => updateFilters({ yearTo: date })}
-                />
+                <YearPicker selected={undefined} onSelect={() => {}} />
               </PopoverContent>
             </Popover>
           </div>
         </div>
       </div>
 
-      {/* Price Range */}
       <div className="space-y-3 sm:space-y-4">
         <h3 className="font-semibold text-sm">Price range</h3>
         <div className="space-y-3 sm:space-y-4">
@@ -435,7 +398,6 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
             </div>
           </div>
 
-          {/* Negotiated Price Toggle */}
           <div className="flex items-center justify-between">
             <label
               htmlFor="negotiated-price"
@@ -452,7 +414,6 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
         </div>
       </div>
 
-      {/* Drivetrain */}
       <div className="space-y-3 sm:space-y-4">
         <h3 className="font-semibold text-sm">Drivetrain</h3>
         <div className="space-y-2">
@@ -460,7 +421,7 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
             <div key={drivetrain.id} className="flex items-center space-x-2">
               <Checkbox
                 id={`drivetrain-${drivetrain.id}`}
-                checked={localDrivetrains.includes(drivetrain.id)}
+                checked={selectedDrivetrains.includes(drivetrain.id)}
                 onCheckedChange={() => toggleDrivetrain(drivetrain.id)}
               />
               <label
@@ -474,7 +435,6 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
         </div>
       </div>
 
-      {/* Fuel Type */}
       <div className="space-y-3 sm:space-y-4">
         <h3 className="font-semibold text-sm">Fuel type</h3>
         <div className="space-y-2">
@@ -482,7 +442,7 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
             <div key={fuelType.id} className="flex items-center space-x-2">
               <Checkbox
                 id={`fuel-${fuelType.id}`}
-                checked={localFuelTypes.includes(fuelType.id)}
+                checked={selectedFuelTypes.includes(fuelType.id)}
                 onCheckedChange={() => toggleFuelType(fuelType.id)}
               />
               <label
