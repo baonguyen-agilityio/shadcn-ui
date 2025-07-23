@@ -24,6 +24,7 @@ interface PageHeaderProps {
   onRemoveFilter?: (filterId: string) => void;
   onClearAll?: () => void;
   className?: string;
+  isPending?: boolean;
 }
 
 export function PageHeader({
@@ -33,10 +34,10 @@ export function PageHeader({
   onRemoveFilter,
   onClearAll,
   className,
+  isPending = false,
 }: PageHeaderProps) {
   return (
     <div className={cn('bg-background border-b', className)}>
-      {/* Breadcrumb Navigation */}
       <div className="container mx-auto py-4">
         <Breadcrumb>
           <BreadcrumbList>
@@ -58,7 +59,6 @@ export function PageHeader({
         </Breadcrumb>
       </div>
 
-      {/* Active Filters - Full Width */}
       {filters.length > 0 && onRemoveFilter && onClearAll && (
         <div className="w-full">
           <div className="container mx-auto py-4">
@@ -67,6 +67,7 @@ export function PageHeader({
               resultCount={resultCount}
               onRemoveFilter={onRemoveFilter}
               onClearAll={onClearAll}
+              isPending={isPending}
             />
           </div>
         </div>

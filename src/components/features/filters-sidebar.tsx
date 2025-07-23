@@ -1,12 +1,10 @@
 'use client';
 
-import * as React from 'react';
-import { MapPin, Navigation, ChevronDownIcon } from 'lucide-react';
-import { format } from 'date-fns';
+import { useState } from 'react';
 import {
   Select,
-  SelectContent,
   SelectItem,
+  SelectContent,
   SelectTrigger,
   SelectValue,
   Button,
@@ -18,50 +16,61 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui';
+import { cn } from '@/lib/utils';
+import { MapPin, Navigation, ChevronDownIcon } from 'lucide-react';
 import { YearPicker } from './year-picker';
-import { FilterLoadingIndicator } from './filter-loading-indicator';
-import { cn, formatPrice } from '@/lib/utils';
-import { useFilters } from '@/lib/hooks';
+import React from 'react';
 
 interface FiltersSidebarProps {
-  className?: string;
+  carType?: 'new' | 'used';
+  currentLocation?: string;
+  currentMake?: string;
+  currentModel?: string;
+  currentBodyTypes?: string[];
+  currentDrivetrains?: string[];
+  currentFuelTypes?: string[];
+  onLocationChange?: (location: string) => void;
+  onMakeChange?: (make: string) => void;
+  onModelChange?: (model: string) => void;
+  isPending?: boolean;
+  onBodyTypeChange?: (bodyTypes: string[]) => void;
+  onDrivetrainChange?: (drivetrains: string[]) => void;
+  onFuelTypeChange?: (fuelTypes: string[]) => void;
 }
 
-export function FiltersSidebar({ className }: FiltersSidebarProps) {
-  const { filters, updateFilters, isDebouncing } = useFilters();
-  const [activeTab, setActiveTab] = React.useState<'new' | 'used'>('used');
-  const [negotiatedPrice, setNegotiatedPrice] = React.useState(false);
+export function FiltersSidebar({
+  carType = 'new',
+  currentLocation = 'any',
+  currentMake = 'any',
+  currentModel = 'any',
+  currentBodyTypes = [],
+  currentDrivetrains = [],
+  currentFuelTypes = [],
+  onLocationChange,
+  onMakeChange,
+  onModelChange,
+  isPending = false,
+  onBodyTypeChange,
+  onDrivetrainChange,
+  onFuelTypeChange,
+}: FiltersSidebarProps) {
+  const [activeTab, setActiveTab] = useState<'new' | 'used'>(carType);
+  const [negotiatedPrice, setNegotiatedPrice] = useState(false);
+  const [localPriceRange, setLocalPriceRange] = useState<[number, number]>([
+    0, 120000,
+  ]);
+  const [selectedBodyTypes, setSelectedBodyTypes] =
+    useState<string[]>(currentBodyTypes);
+  const [selectedDrivetrains, setSelectedDrivetrains] =
+    useState<string[]>(currentDrivetrains);
+  const [selectedFuelTypes, setSelectedFuelTypes] =
+    useState<string[]>(currentFuelTypes);
 
-  // Local state for smooth interactions
-  const [localPriceRange, setLocalPriceRange] = React.useState<
-    [number, number]
-  >(filters.priceRange);
-  const [localBodyTypes, setLocalBodyTypes] = React.useState<string[]>(
-    filters.selectedBodyTypes
-  );
-  const [localDrivetrains, setLocalDrivetrains] = React.useState<string[]>(
-    filters.selectedDrivetrains
-  );
-  const [localFuelTypes, setLocalFuelTypes] = React.useState<string[]>(
-    filters.selectedFuelTypes
-  );
-  const [localMake, setLocalMake] = React.useState(filters.selectedMake);
-  const [localModel, setLocalModel] = React.useState(filters.selectedModel);
-  const [location, setLocation] = React.useState(filters.location);
-  const [isDragging, setIsDragging] = React.useState(false);
-
-  // Sync local state with filters
   React.useEffect(() => {
-    if (!isDragging) {
-      setLocalPriceRange(filters.priceRange);
-    }
-    setLocalBodyTypes(filters.selectedBodyTypes);
-    setLocalDrivetrains(filters.selectedDrivetrains);
-    setLocalFuelTypes(filters.selectedFuelTypes);
-    setLocalMake(filters.selectedMake);
-    setLocalModel(filters.selectedModel);
-    setLocation(filters.location);
-  }, [filters, isDragging]);
+    setSelectedBodyTypes(currentBodyTypes);
+    setSelectedDrivetrains(currentDrivetrains);
+    setSelectedFuelTypes(currentFuelTypes);
+  }, [currentBodyTypes, currentDrivetrains, currentFuelTypes]);
 
   const bodyTypes = [
     { id: 'Sedan', label: 'Sedan' },
@@ -100,91 +109,64 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
   ];
 
   const toggleBodyType = (bodyType: string) => {
-    const newBodyTypes = localBodyTypes.includes(bodyType)
-      ? localBodyTypes.filter(type => type !== bodyType)
-      : [...localBodyTypes, bodyType];
-
-    setLocalBodyTypes(newBodyTypes);
-    updateFilters({ selectedBodyTypes: newBodyTypes }, { debounce: true });
+    const newBodyTypes = selectedBodyTypes.includes(bodyType)
+      ? selectedBodyTypes.filter(bt => bt !== bodyType)
+      : [...selectedBodyTypes, bodyType];
+    setSelectedBodyTypes(newBodyTypes);
+    onBodyTypeChange?.(newBodyTypes);
   };
 
   const toggleDrivetrain = (drivetrain: string) => {
-    const newDrivetrains = localDrivetrains.includes(drivetrain)
-      ? localDrivetrains.filter(type => type !== drivetrain)
-      : [...localDrivetrains, drivetrain];
-
-    setLocalDrivetrains(newDrivetrains);
-    updateFilters({ selectedDrivetrains: newDrivetrains }, { debounce: true });
+    const newDrivetrains = selectedDrivetrains.includes(drivetrain)
+      ? selectedDrivetrains.filter(dt => dt !== drivetrain)
+      : [...selectedDrivetrains, drivetrain];
+    setSelectedDrivetrains(newDrivetrains);
+    onDrivetrainChange?.(newDrivetrains);
   };
 
   const toggleFuelType = (fuelType: string) => {
-    const newFuelTypes = localFuelTypes.includes(fuelType)
-      ? localFuelTypes.filter(type => type !== fuelType)
-      : [...localFuelTypes, fuelType];
-
-    setLocalFuelTypes(newFuelTypes);
-    updateFilters({ selectedFuelTypes: newFuelTypes }, { debounce: true });
+    const newFuelTypes = selectedFuelTypes.includes(fuelType)
+      ? selectedFuelTypes.filter(ft => ft !== fuelType)
+      : [...selectedFuelTypes, fuelType];
+    setSelectedFuelTypes(newFuelTypes);
+    onFuelTypeChange?.(newFuelTypes);
   };
 
-  // Handle slider value change during drag
   const handleSliderChange = (value: number[]) => {
-    setLocalPriceRange(value as [number, number]);
+    setLocalPriceRange([value[0], value[1]]);
   };
 
-  // Handle slider drag end
-  const handleSliderDragEnd = () => {
-    setIsDragging(false);
-    updateFilters({ priceRange: localPriceRange }, { debounce: true });
-  };
+  const handleSliderDragEnd = () => {};
 
-  // Handle price input changes
   const handlePriceInputChange = (index: 0 | 1, value: string) => {
-    const numValue = Number(value.replace(/[^0-9]/g, ''));
-    if (isNaN(numValue)) return;
-
+    const numValue = value === '' ? 0 : parseInt(value, 10);
     const newRange: [number, number] = [...localPriceRange] as [number, number];
-    newRange[index] = Math.max(0, Math.min(200000, numValue));
+    newRange[index] = numValue;
 
-    // Ensure min doesn't exceed max and vice versa
-    if (index === 0 && newRange[0] > newRange[1]) {
-      newRange[1] = newRange[0];
-    } else if (index === 1 && newRange[1] < newRange[0]) {
-      newRange[0] = newRange[1];
+    if (index === 0 && numValue > newRange[1]) {
+      newRange[1] = numValue;
+    }
+    if (index === 1 && numValue < newRange[0]) {
+      newRange[0] = numValue;
     }
 
     setLocalPriceRange(newRange);
-    updateFilters({ priceRange: newRange }, { debounce: true });
-  };
-
-  const handleLocationChange = (value: string) => {
-    setLocation(value);
-    updateFilters({ location: value }, { debounce: true });
-  };
-
-  // Handle make change with immediate local update and debounced API call
-  const handleMakeChange = (value: string) => {
-    setLocalMake(value);
-    updateFilters({ selectedMake: value }, { debounce: true });
-  };
-
-  // Handle model change with immediate local update and debounced API call
-  const handleModelChange = (value: string) => {
-    setLocalModel(value);
-    updateFilters({ selectedModel: value }, { debounce: true });
   };
 
   return (
-    <div className={cn('bg-background space-y-6', className)}>
-      {/* Loading Indicator */}
-      <FilterLoadingIndicator isDebouncing={isDebouncing} />
+    <div className="space-y-6 relative">
+      {isPending && (
+        <div className="absolute inset-0 bg-white/50 flex items-center justify-center z-10 rounded-lg">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+        </div>
+      )}
 
-      {/* Car Type Tabs */}
       <div className="flex gap-2">
         <Button
           variant="outline"
-          size="lg"
+          size="sm"
           className={cn(
-            'flex-1 rounded-full',
+            'flex-1 rounded-full text-xs sm:text-sm',
             activeTab === 'new'
               ? 'bg-secondary text-foreground hover:bg-secondary border-foreground'
               : 'text-muted-foreground hover:text-foreground hover:bg-transparent'
@@ -195,9 +177,9 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
         </Button>
         <Button
           variant="outline"
-          size="lg"
+          size="sm"
           className={cn(
-            'flex-1 rounded-full',
+            'flex-1 rounded-full text-xs sm:text-sm',
             activeTab === 'used'
               ? 'bg-secondary text-foreground hover:bg-secondary border-foreground'
               : 'text-muted-foreground hover:text-foreground hover:bg-transparent'
@@ -208,11 +190,10 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
         </Button>
       </div>
 
-      {/* Location and Radius */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         <h3 className="font-semibold text-sm">Location and radius</h3>
-        <div className="space-y-3">
-          <Select value={location} onValueChange={handleLocationChange}>
+        <div className="space-y-2 sm:space-y-3">
+          <Select value={currentLocation} onValueChange={onLocationChange}>
             <SelectTrigger className="w-full">
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-muted-foreground" />
@@ -227,14 +208,10 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
               <SelectItem value="Dallas">Dallas</SelectItem>
               <SelectItem value="New York">New York</SelectItem>
               <SelectItem value="Los Angeles">Los Angeles</SelectItem>
-              <SelectItem value="San Jose">San Jose</SelectItem>
             </SelectContent>
           </Select>
 
-          <Select
-            value={filters.radius}
-            onValueChange={value => updateFilters({ radius: value })}
-          >
+          <Select defaultValue="any">
             <SelectTrigger className="w-full">
               <div className="flex items-center gap-2">
                 <Navigation className="h-4 w-4 text-muted-foreground" />
@@ -252,13 +229,12 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
         </div>
       </div>
 
-      {/* Body Type */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         <h3 className="font-semibold text-sm">Body type</h3>
         <div className="relative">
           <div
             className={cn(
-              'max-h-48 overflow-y-auto space-y-2 pr-1',
+              'max-h-32 sm:max-h-48 overflow-y-auto space-y-2 pr-1',
               '[&::-webkit-scrollbar]:w-0.5',
               '[&::-webkit-scrollbar-track]:bg-muted',
               '[&::-webkit-scrollbar-thumb]:bg-muted-foreground/50'
@@ -268,10 +244,13 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
               <div key={bodyType.id} className="flex items-center space-x-2">
                 <Checkbox
                   id={bodyType.id}
-                  checked={localBodyTypes.includes(bodyType.id)}
+                  checked={selectedBodyTypes.includes(bodyType.id)}
                   onCheckedChange={() => toggleBodyType(bodyType.id)}
                 />
-                <label htmlFor={bodyType.id} className="text-sm cursor-pointer">
+                <label
+                  htmlFor={bodyType.id}
+                  className="text-xs sm:text-sm cursor-pointer"
+                >
                   {bodyType.label}
                 </label>
               </div>
@@ -280,134 +259,111 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
         </div>
       </div>
 
-      {/* Year */}
-      <div className="space-y-4">
-        <h3 className="font-semibold text-sm">Year</h3>
-        <div className="flex gap-2">
-          {/* From Year */}
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  'flex-1 justify-between text-left font-normal',
-                  !filters.yearFrom && 'text-muted-foreground'
-                )}
-              >
-                {filters.yearFrom ? format(filters.yearFrom, 'yyyy') : 'From'}
-                <ChevronDownIcon />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <YearPicker
-                selected={filters.yearFrom}
-                onSelect={date =>
-                  updateFilters({ yearFrom: date }, { debounce: true })
-                }
-              />
-            </PopoverContent>
-          </Popover>
-
-          <span className="text-muted-foreground self-center">-</span>
-
-          {/* To Year */}
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  'flex-1 justify-between text-left font-normal',
-                  !filters.yearTo && 'text-muted-foreground'
-                )}
-              >
-                {filters.yearTo ? format(filters.yearTo, 'yyyy') : 'To'}
-                <ChevronDownIcon />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <YearPicker
-                selected={filters.yearTo}
-                onSelect={date =>
-                  updateFilters({ yearTo: date }, { debounce: true })
-                }
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-      </div>
-
-      {/* Make and Model */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         <h3 className="font-semibold text-sm">Make and model</h3>
-        <div className="space-y-3">
-          <Select value={localMake} onValueChange={handleMakeChange}>
+        <div className="space-y-2 sm:space-y-3">
+          <Select value={currentMake} onValueChange={onMakeChange}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Any make" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="any">Any make</SelectItem>
-              <SelectItem value="Volvo">Volvo</SelectItem>
-              <SelectItem value="Porsche">Porsche</SelectItem>
-              <SelectItem value="Ford">Ford</SelectItem>
-              <SelectItem value="Mercedes-Benz">Mercedes-Benz</SelectItem>
-              <SelectItem value="Maserati">Maserati</SelectItem>
-              <SelectItem value="Tesla">Tesla</SelectItem>
               <SelectItem value="Toyota">Toyota</SelectItem>
-              <SelectItem value="Mitsubishi">Mitsubishi</SelectItem>
+              <SelectItem value="Honda">Honda</SelectItem>
+              <SelectItem value="Ford">Ford</SelectItem>
+              <SelectItem value="Chevrolet">Chevrolet</SelectItem>
+              <SelectItem value="BMW">BMW</SelectItem>
+              <SelectItem value="Mercedes-Benz">Mercedes-Benz</SelectItem>
+              <SelectItem value="Audi">Audi</SelectItem>
+              <SelectItem value="Volkswagen">Volkswagen</SelectItem>
+              <SelectItem value="Nissan">Nissan</SelectItem>
             </SelectContent>
           </Select>
 
-          <Select value={localModel} onValueChange={handleModelChange}>
+          <Select value={currentModel} onValueChange={onModelChange}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Any model" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="any">Any model</SelectItem>
-              <SelectItem value="XC90">XC90</SelectItem>
-              <SelectItem value="911">911</SelectItem>
+              <SelectItem value="Camry">Camry</SelectItem>
+              <SelectItem value="Civic">Civic</SelectItem>
               <SelectItem value="F-150">F-150</SelectItem>
-              <SelectItem value="A205">A205</SelectItem>
-              <SelectItem value="Model 3">Model 3</SelectItem>
+              <SelectItem value="Silverado">Silverado</SelectItem>
+              <SelectItem value="3 Series">3 Series</SelectItem>
+              <SelectItem value="C-Class">C-Class</SelectItem>
+              <SelectItem value="A4">A4</SelectItem>
+              <SelectItem value="Golf">Golf</SelectItem>
+              <SelectItem value="Altima">Altima</SelectItem>
             </SelectContent>
           </Select>
         </div>
       </div>
 
-      {/* Price */}
-      <div className="space-y-4">
-        <h3 className="font-semibold text-sm">Price</h3>
-        <div className="space-y-4">
-          {/* Price Range Slider */}
-          <div className="px-3">
-            <Slider
-              value={localPriceRange}
-              onValueChange={handleSliderChange}
-              onValueCommit={handleSliderDragEnd}
-              max={200000}
-              min={0}
-              step={1000}
-              className="w-full"
-            />
-            <div className="flex justify-between text-xs text-muted-foreground mt-1">
-              <span className={cn(isDragging && 'text-primary font-medium')}>
-                {formatPrice(localPriceRange[0])}
-              </span>
-              <span className={cn(isDragging && 'text-primary font-medium')}>
-                {formatPrice(localPriceRange[1])}
-              </span>
-            </div>
-            {isDragging && (
-              <div className="text-xs text-primary mt-1 text-center">
-                Release to apply filter
-              </div>
-            )}
-          </div>
+      <div className="space-y-3 sm:space-y-4">
+        <h3 className="font-semibold text-sm">Year range</h3>
+        <div className="space-y-2 sm:space-y-3">
+          <div className="flex gap-2">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    'flex-1 justify-between text-left font-normal text-xs sm:text-sm',
+                    'text-muted-foreground'
+                  )}
+                >
+                  From
+                  <ChevronDownIcon className="h-3 w-3" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <YearPicker selected={undefined} onSelect={() => {}} />
+              </PopoverContent>
+            </Popover>
 
-          {/* Price Input Fields */}
+            <span className="text-muted-foreground self-center text-xs sm:text-sm">
+              -
+            </span>
+
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    'flex-1 justify-between text-left font-normal text-xs sm:text-sm',
+                    'text-muted-foreground'
+                  )}
+                >
+                  To
+                  <ChevronDownIcon className="h-3 w-3" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <YearPicker selected={undefined} onSelect={() => {}} />
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-3 sm:space-y-4">
+        <h3 className="font-semibold text-sm">Price range</h3>
+        <div className="space-y-3 sm:space-y-4">
+          <Slider
+            value={localPriceRange}
+            onValueChange={handleSliderChange}
+            onValueCommit={handleSliderDragEnd}
+            max={120000}
+            min={0}
+            step={1000}
+            className="w-full"
+          />
+
           <div className="flex gap-2">
             <div className="flex-1">
               <div className="relative">
-                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground text-sm">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground text-xs sm:text-sm">
                   $
                 </span>
                 <Input
@@ -416,15 +372,17 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     handlePriceInputChange(0, e.target.value)
                   }
-                  className="pl-6"
+                  className="pl-6 text-xs sm:text-sm"
                   placeholder="0"
                 />
               </div>
             </div>
-            <span className="text-muted-foreground self-center">-</span>
+            <span className="text-muted-foreground self-center text-xs sm:text-sm">
+              -
+            </span>
             <div className="flex-1">
               <div className="relative">
-                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground text-sm">
+                <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground text-xs sm:text-sm">
                   $
                 </span>
                 <Input
@@ -433,18 +391,17 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     handlePriceInputChange(1, e.target.value)
                   }
-                  className="pl-6"
+                  className="pl-6 text-xs sm:text-sm"
                   placeholder="120000"
                 />
               </div>
             </div>
           </div>
 
-          {/* Negotiated Price Toggle */}
           <div className="flex items-center justify-between">
             <label
               htmlFor="negotiated-price"
-              className="text-sm cursor-pointer"
+              className="text-xs sm:text-sm cursor-pointer"
             >
               Negotiated price
             </label>
@@ -457,20 +414,19 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
         </div>
       </div>
 
-      {/* Drivetrain */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         <h3 className="font-semibold text-sm">Drivetrain</h3>
         <div className="space-y-2">
           {drivetrains.map(drivetrain => (
             <div key={drivetrain.id} className="flex items-center space-x-2">
               <Checkbox
                 id={`drivetrain-${drivetrain.id}`}
-                checked={localDrivetrains.includes(drivetrain.id)}
+                checked={selectedDrivetrains.includes(drivetrain.id)}
                 onCheckedChange={() => toggleDrivetrain(drivetrain.id)}
               />
               <label
                 htmlFor={`drivetrain-${drivetrain.id}`}
-                className="text-sm cursor-pointer"
+                className="text-xs sm:text-sm cursor-pointer"
               >
                 {drivetrain.label}
               </label>
@@ -479,20 +435,19 @@ export function FiltersSidebar({ className }: FiltersSidebarProps) {
         </div>
       </div>
 
-      {/* Fuel Type */}
-      <div className="space-y-4">
+      <div className="space-y-3 sm:space-y-4">
         <h3 className="font-semibold text-sm">Fuel type</h3>
         <div className="space-y-2">
           {fuelTypes.map(fuelType => (
             <div key={fuelType.id} className="flex items-center space-x-2">
               <Checkbox
                 id={`fuel-${fuelType.id}`}
-                checked={localFuelTypes.includes(fuelType.id)}
+                checked={selectedFuelTypes.includes(fuelType.id)}
                 onCheckedChange={() => toggleFuelType(fuelType.id)}
               />
               <label
                 htmlFor={`fuel-${fuelType.id}`}
-                className="text-sm cursor-pointer"
+                className="text-xs sm:text-sm cursor-pointer"
               >
                 {fuelType.label}
               </label>

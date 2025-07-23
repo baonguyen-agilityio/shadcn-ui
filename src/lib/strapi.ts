@@ -36,7 +36,7 @@ class StrapiClient {
 
     const response = await fetch(url, {
       headers,
-      next: { revalidate: 3600 }, // Cache for 1 hour
+      next: { revalidate: 3600 },
     });
 
     if (!response.ok) {
@@ -48,15 +48,10 @@ class StrapiClient {
 
   async getAll<T>(
     collection: string,
-    params?: Record<string, string | number | boolean>
+    params?: URLSearchParams
   ): Promise<StrapiResponse<T[]>> {
-    const searchParams = params
-      ? new URLSearchParams(
-          Object.entries(params).map(([key, value]) => [key, String(value)])
-        ).toString()
-      : '';
-    const url = searchParams
-      ? `/${collection}?${searchParams}`
+    const url = params
+      ? `/${collection}?${params.toString()}`
       : `/${collection}`;
 
     return this.request<T[]>(url);
