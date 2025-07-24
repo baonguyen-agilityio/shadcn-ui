@@ -124,23 +124,32 @@ const MobileMenu = React.forwardRef<HTMLDivElement, MobileMenuProps>(
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[200px]">
           {items.map(item => (
-            <DropdownMenuItem key={item.name}>
-              <span className="w-full">{item.name}</span>
+            <DropdownMenuItem key={item.name} asChild>
+              <Link href={item.href || '/'} className="w-full cursor-pointer">
+                {item.name}
+              </Link>
             </DropdownMenuItem>
           ))}
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <span className="w-full flex items-center gap-2">
+          <DropdownMenuItem asChild>
+            <Link
+              href="/profile"
+              className="w-full flex items-center gap-2 cursor-pointer"
+            >
               <User className="h-4 w-4" />
               Profile
-            </span>
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <span className="w-full">Sign In</span>
+          <DropdownMenuItem asChild>
+            <Link href="/signin" className="w-full cursor-pointer">
+              Sign In
+            </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>
-            <span className="w-full">Get Started</span>
+          <DropdownMenuItem asChild>
+            <Link href="/signup" className="w-full cursor-pointer">
+              Get Started
+            </Link>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

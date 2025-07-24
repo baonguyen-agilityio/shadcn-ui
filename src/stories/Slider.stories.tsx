@@ -59,20 +59,6 @@ export const Range: Story = {
   ),
 };
 
-export const WithSteps: Story = {
-  args: {
-    defaultValue: [20],
-    max: 100,
-    min: 0,
-    step: 10,
-  },
-  render: args => (
-    <div className="w-64">
-      <Slider {...args} />
-    </div>
-  ),
-};
-
 export const Disabled: Story = {
   args: {
     defaultValue: [50],
@@ -84,25 +70,6 @@ export const Disabled: Story = {
   render: args => (
     <div className="w-64">
       <Slider {...args} />
-    </div>
-  ),
-};
-
-export const Volume: Story = {
-  render: () => (
-    <div className="w-64 space-y-4">
-      <div>
-        <label className="text-sm font-medium">Volume</label>
-        <Slider defaultValue={[70]} max={100} min={0} step={1} />
-      </div>
-      <div>
-        <label className="text-sm font-medium">Bass</label>
-        <Slider defaultValue={[25]} max={100} min={0} step={1} />
-      </div>
-      <div>
-        <label className="text-sm font-medium">Treble</label>
-        <Slider defaultValue={[40]} max={100} min={0} step={1} />
-      </div>
     </div>
   ),
 };

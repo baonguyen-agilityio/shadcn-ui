@@ -312,6 +312,7 @@ export function FiltersSidebar({
                     'flex-1 justify-between text-left font-normal text-xs sm:text-sm',
                     'text-muted-foreground'
                   )}
+                  aria-label="Select starting year for year range filter"
                 >
                   From
                   <ChevronDownIcon className="h-3 w-3" />
@@ -334,6 +335,7 @@ export function FiltersSidebar({
                     'flex-1 justify-between text-left font-normal text-xs sm:text-sm',
                     'text-muted-foreground'
                   )}
+                  aria-label="Select ending year for year range filter"
                 >
                   To
                   <ChevronDownIcon className="h-3 w-3" />

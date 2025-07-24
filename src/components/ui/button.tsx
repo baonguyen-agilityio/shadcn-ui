@@ -35,16 +35,42 @@ const buttonVariants = cva(
   }
 );
 
+export interface ButtonProps
+  extends React.ComponentProps<'button'>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
+
+/**
+ * Button component with accessibility support
+ *
+ * @example
+ * // Button with text (accessible by default)
+ * <Button>Save</Button>
+ *
+ * @example
+ * // Icon button - MUST include aria-label for accessibility
+ * <Button size="icon" aria-label="Add to favorites">
+ *   <Heart className="h-4 w-4" />
+ * </Button>
+ *
+ * @example
+ * // Alternative: use screen reader only text
+ * <Button size="icon">
+ *   <Heart className="h-4 w-4" />
+ *   <span className="sr-only">Add to favorites</span>
+ * </Button>
+ *
+ * @param props - Button props including standard button attributes
+ * @param props.aria-label - Required for icon buttons or buttons without descriptive text
+ */
 function Button({
   className,
   variant,
   size,
   asChild = false,
   ...props
-}: React.ComponentProps<'button'> &
-  VariantProps<typeof buttonVariants> & {
-    asChild?: boolean;
-  }) {
+}: ButtonProps) {
   const Comp = asChild ? Slot : 'button';
 
   return (

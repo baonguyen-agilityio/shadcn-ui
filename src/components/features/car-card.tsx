@@ -62,6 +62,7 @@ export function CarCard({
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 rounded-full border border-border"
+                aria-label="Add to favorites"
               >
                 <Heart className="h-4 w-4 transition-colors" />
               </Button>
@@ -69,6 +70,7 @@ export function CarCard({
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 rounded-full border border-border"
+                aria-label="Set price alert"
               >
                 <Bell className="h-4 w-4 text-[#333D4C]" />
               </Button>
@@ -76,6 +78,7 @@ export function CarCard({
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 rounded-full border border-border"
+                aria-label="Add to compare"
               >
                 <Repeat className="h-4 w-4 text-[#333D4C]" />
               </Button>
@@ -164,6 +167,7 @@ export function CarCard({
               variant="ghost"
               size="icon"
               className="h-8 w-8 rounded-full border border-border"
+              aria-label={`Add ${title} ${year} to favorites`}
             >
               <Heart className={cn('h-2 w-2 transition-colors')} />
             </Button>
@@ -171,6 +175,7 @@ export function CarCard({
               variant="ghost"
               size="icon"
               className="h-8 w-8 rounded-full border border-border"
+              aria-label={`Set price alert for ${title} ${year}`}
             >
               <Bell className="h-2 w-2 text-[#333D4C]" />
             </Button>
@@ -178,6 +183,7 @@ export function CarCard({
               variant="ghost"
               size="icon"
               className="h-8 w-8 rounded-full border border-border"
+              aria-label={`Add ${title} ${year} to compare list`}
             >
               <Repeat className="h-2 w-2 text-[#333D4C]" />
             </Button>

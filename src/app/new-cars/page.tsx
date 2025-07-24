@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { NewCarsPage } from '@/components/features/new/new-cars-page';
+import { NewCarsPage } from '@/components/features/new-cars/new-cars-page';
 import { PAGINATION } from '@/lib/constants';
 import {
   buildNewCarsStrapiFilters,
