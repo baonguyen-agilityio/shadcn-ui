@@ -19,17 +19,24 @@ export function Brand({
   text = 'Your Brand',
 }: BrandProps) {
   const content = (
-    <div className={cn('flex items-center space-x-2', className)}>
-      <Logo size={logoSize} className="h-8 w-8" />
+    <h1 className={cn('flex items-center space-x-2', className)}>
+      <Logo size={logoSize} className="h-8 w-8" aria-hidden="true" />
       {showText && (
         <span className="hidden font-bold sm:inline-block">{text}</span>
       )}
-    </div>
+      {/* Always provide accessible text for screen readers */}
+      <span className="sr-only">{text}</span>
+    </h1>
   );
 
   if (href) {
     return (
-      <Link href={href} className="inline-block">
+      <Link
+        href={href}
+        className="inline-block"
+        aria-label={`${text} - Go to homepage`}
+        title={`${text} - Go to homepage`}
+      >
         {content}
       </Link>
     );

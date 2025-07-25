@@ -53,6 +53,8 @@ const DesktopNav = React.forwardRef<HTMLElement, DesktopNavProps>(
     <nav
       ref={ref}
       className={cn('hidden md:flex items-center space-x-6', className)}
+      role="navigation"
+      aria-label="Main navigation"
       {...props}
     >
       {items.map(item => (
@@ -60,6 +62,8 @@ const DesktopNav = React.forwardRef<HTMLElement, DesktopNavProps>(
           key={item.name}
           href={item.href || '/'}
           className="text-sm font-medium transition-colors hover:text-foreground/80 text-foreground/60 cursor-pointer"
+          role="link"
+          aria-label={item.name}
         >
           {item.name}
         </Link>
