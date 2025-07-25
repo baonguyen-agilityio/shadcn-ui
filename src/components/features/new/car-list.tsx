@@ -45,7 +45,7 @@ export function CarList({
 }) {
   const [isPaginationPending, startPaginationTransition] = useTransition();
   const [isSortPending, startSortTransition] = useTransition();
-  const searchParams = useSearchParams() ?? '';
+  const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
 
@@ -53,6 +53,7 @@ export function CarList({
   const [compareCount] = useState(0);
 
   const currentSort = useMemo(() => {
+    if (!searchParams) return 'popular';
     const params = new URLSearchParams(searchParams);
     return params.get('sort') || 'popular';
   }, [searchParams]);
@@ -77,6 +78,7 @@ export function CarList({
   } = useCarFilter();
 
   const currentPage = useMemo(() => {
+    if (!searchParams) return PAGINATION.DEFAULT_PAGE;
     const params = new URLSearchParams(searchParams);
     return Number(params.get('page')) || PAGINATION.DEFAULT_PAGE;
   }, [searchParams]);
@@ -87,6 +89,7 @@ export function CarList({
   const handlePageChange = useCallback(
     (page: number) => {
       startPaginationTransition(() => {
+        if (!searchParams) return;
         const params = new URLSearchParams(searchParams);
         if (page === 1) {
           params.delete('page');
@@ -97,12 +100,13 @@ export function CarList({
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     },
-    [pathname, replace, searchParams]
+    [pathname, replace, searchParams, startPaginationTransition]
   );
 
   const handleSortChange = useCallback(
     (value: string) => {
       startSortTransition(() => {
+        if (!searchParams) return;
         const params = new URLSearchParams(searchParams);
         if (value !== 'popular') {
           params.set('sort', value);
@@ -113,7 +117,7 @@ export function CarList({
         replace(`${pathname}?${params.toString()}`);
       });
     },
-    [pathname, replace, searchParams]
+    [pathname, replace, searchParams, startSortTransition]
   );
 
   const isPending = isFilterPending || isPaginationPending || isSortPending;
@@ -132,6 +136,7 @@ export function CarList({
                 'p-0 border-0 shadow-none bg-transparent hover:bg-transparent min-w-fit text-gray-600 focus-visible:ring-0 focus-visible:outline-none',
                 isFilterPending && 'opacity-50 cursor-not-allowed'
               )}
+              aria-label="Sort cars by"
             >
               <ArrowUpDown className="h-4 w-4" />
               <SelectValue />
@@ -170,8 +175,10 @@ export function CarList({
               )}
               onClick={() => !isFilterPending && setViewType('grid')}
               disabled={isFilterPending}
+              aria-label="Switch to grid view"
             >
               <LayoutGrid className="h-4 w-4" />
+              <span className="sr-only">Grid view</span>
             </Button>
             <Button
               variant={viewType === 'list' ? 'default' : 'ghost'}
@@ -182,8 +189,10 @@ export function CarList({
               )}
               onClick={() => !isFilterPending && setViewType('list')}
               disabled={isFilterPending}
+              aria-label="Switch to list view"
             >
               <List className="h-4 w-4" />
+              <span className="sr-only">List view</span>
             </Button>
           </div>
         </div>

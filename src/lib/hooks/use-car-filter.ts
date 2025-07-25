@@ -36,13 +36,13 @@ export interface CarFilterReturn extends CarFilterState, CarFilterHandlers {
 
 export function useCarFilter(): CarFilterReturn {
   const [isPending, startTransition] = useTransition();
-  const searchParams = useSearchParams() ?? '';
+  const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
 
   const handleReplaceURL = useCallback(
     (params: URLSearchParams) => {
-      startTransition?.(() => {
+      startTransition(() => {
         replace(`${pathname}?${params.toString()}`);
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
@@ -51,33 +51,39 @@ export function useCarFilter(): CarFilterReturn {
   );
 
   const currentLocation = useMemo(() => {
+    if (!searchParams) return 'any';
     const params = new URLSearchParams(searchParams);
     return params.get('location') || 'any';
   }, [searchParams]);
 
   const currentMake = useMemo(() => {
+    if (!searchParams) return 'any';
     const params = new URLSearchParams(searchParams);
     return params.get('make') || 'any';
   }, [searchParams]);
 
   const currentModel = useMemo(() => {
+    if (!searchParams) return 'any';
     const params = new URLSearchParams(searchParams);
     return params.get('model') || 'any';
   }, [searchParams]);
 
   const currentBodyTypes = useMemo(() => {
+    if (!searchParams) return [];
     const params = new URLSearchParams(searchParams);
     const bodyTypes = params.get('bodyTypes');
     return bodyTypes ? bodyTypes.split(',') : [];
   }, [searchParams]);
 
   const currentDrivetrains = useMemo(() => {
+    if (!searchParams) return [];
     const params = new URLSearchParams(searchParams);
     const drivetrains = params.get('drivetrains');
     return drivetrains ? drivetrains.split(',') : [];
   }, [searchParams]);
 
   const currentFuelTypes = useMemo(() => {
+    if (!searchParams) return [];
     const params = new URLSearchParams(searchParams);
     const fuelTypes = params.get('fuelTypes');
     return fuelTypes ? fuelTypes.split(',') : [];
@@ -146,6 +152,7 @@ export function useCarFilter(): CarFilterReturn {
 
   const handleLocationChange = useCallback(
     (value: string) => {
+      if (!searchParams) return;
       const params = new URLSearchParams(searchParams);
       if (value !== 'any') {
         params.set('location', value);
@@ -160,6 +167,7 @@ export function useCarFilter(): CarFilterReturn {
 
   const handleMakeChange = useCallback(
     (value: string) => {
+      if (!searchParams) return;
       const params = new URLSearchParams(searchParams);
       if (value !== 'any') {
         params.set('make', value);
@@ -175,6 +183,7 @@ export function useCarFilter(): CarFilterReturn {
 
   const handleModelChange = useCallback(
     (value: string) => {
+      if (!searchParams) return;
       const params = new URLSearchParams(searchParams);
       if (value !== 'any') {
         params.set('model', value);
@@ -189,6 +198,7 @@ export function useCarFilter(): CarFilterReturn {
 
   const handleBodyTypeChange = useCallback(
     (bodyTypes: string[]) => {
+      if (!searchParams) return;
       const params = new URLSearchParams(searchParams);
       if (bodyTypes.length > 0) {
         params.set('bodyTypes', bodyTypes.join(','));
@@ -203,6 +213,7 @@ export function useCarFilter(): CarFilterReturn {
 
   const handleDrivetrainChange = useCallback(
     (drivetrains: string[]) => {
+      if (!searchParams) return;
       const params = new URLSearchParams(searchParams);
       if (drivetrains.length > 0) {
         params.set('drivetrains', drivetrains.join(','));
@@ -217,6 +228,7 @@ export function useCarFilter(): CarFilterReturn {
 
   const handleFuelTypeChange = useCallback(
     (fuelTypes: string[]) => {
+      if (!searchParams) return;
       const params = new URLSearchParams(searchParams);
       if (fuelTypes.length > 0) {
         params.set('fuelTypes', fuelTypes.join(','));
@@ -231,6 +243,7 @@ export function useCarFilter(): CarFilterReturn {
 
   const handleRemoveFilterById = useCallback(
     (filterId: string) => {
+      if (!searchParams) return;
       const filterType = getFilterTypeFromId(filterId);
       const filter = activeFilters.find(f => f.id === filterId);
       if (!filter) return;
@@ -299,6 +312,7 @@ export function useCarFilter(): CarFilterReturn {
   );
 
   const handleClearAllFilters = useCallback(() => {
+    if (!searchParams) return;
     const params = new URLSearchParams(searchParams);
     params.delete('location');
     params.delete('make');

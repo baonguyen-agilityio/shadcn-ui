@@ -62,6 +62,7 @@ export function CarCard({
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 rounded-full border border-border"
+                aria-label="Add to favorites"
               >
                 <Heart className="h-4 w-4 transition-colors" />
               </Button>
@@ -69,6 +70,7 @@ export function CarCard({
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 rounded-full border border-border"
+                aria-label="Set price alert"
               >
                 <Bell className="h-4 w-4 text-[#333D4C]" />
               </Button>
@@ -76,6 +78,7 @@ export function CarCard({
                 variant="ghost"
                 size="icon"
                 className="h-8 w-8 rounded-full border border-border"
+                aria-label="Compare car"
               >
                 <Repeat className="h-4 w-4 text-[#333D4C]" />
               </Button>
@@ -83,12 +86,12 @@ export function CarCard({
           </div>
 
           <div className="mb-3">
-            <h3 className="font-semibold text-xl leading-tight text-foreground mb-1">
+            <p className="font-semibold text-xl leading-tight text-foreground mb-1">
               {title}{' '}
               <span className="text-muted-foreground font-normal">
                 ({year})
               </span>
-            </h3>
+            </p>
             <p className="text-2xl font-bold text-foreground">
               {formatPrice(price)}
             </p>
@@ -164,6 +167,7 @@ export function CarCard({
               variant="ghost"
               size="icon"
               className="h-8 w-8 rounded-full border border-border"
+              aria-label="Add to favorites"
             >
               <Heart className={cn('h-2 w-2 transition-colors')} />
             </Button>
@@ -171,6 +175,7 @@ export function CarCard({
               variant="ghost"
               size="icon"
               className="h-8 w-8 rounded-full border border-border"
+              aria-label="Set price alert"
             >
               <Bell className="h-2 w-2 text-[#333D4C]" />
             </Button>
@@ -178,16 +183,17 @@ export function CarCard({
               variant="ghost"
               size="icon"
               className="h-8 w-8 rounded-full border border-border"
+              aria-label="Compare car"
             >
               <Repeat className="h-2 w-2 text-[#333D4C]" />
             </Button>
           </div>
         </div>
 
-        <h3 className="font-semibold text-base leading-tight text-foreground">
+        <p className="font-semibold text-base leading-tight text-foreground">
           {title}{' '}
           <span className="text-muted-foreground font-normal">({year})</span>
-        </h3>
+        </p>
 
         <p className="text-xl font-bold text-foreground">
           {formatPrice(price)}

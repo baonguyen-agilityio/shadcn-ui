@@ -51,6 +51,7 @@ export function ListingGrid({
 
   const handlePageChange = (page: number) => {
     startTransition(() => {
+      if (!searchParams) return;
       const params = new URLSearchParams(searchParams);
 
       if (page === 1) {
@@ -78,6 +79,7 @@ export function ListingGrid({
                 'p-0 border-0 shadow-none bg-transparent hover:bg-transparent min-w-fit text-gray-600 focus-visible:ring-0 focus-visible:outline-none',
                 isFilterPending && 'opacity-50 cursor-not-allowed'
               )}
+              aria-label="Sort cars by"
             >
               <ArrowUpDown className="h-4 w-4" />
               <SelectValue />
@@ -119,8 +121,10 @@ export function ListingGrid({
               )}
               onClick={() => !isFilterPending && setViewType('grid')}
               disabled={isFilterPending}
+              aria-label="Switch to grid view"
             >
               <LayoutGrid className="h-4 w-4" />
+              <span className="sr-only">Grid view</span>
             </Button>
             <Button
               variant={viewType === 'list' ? 'default' : 'ghost'}
@@ -131,8 +135,10 @@ export function ListingGrid({
               )}
               onClick={() => !isFilterPending && setViewType('list')}
               disabled={isFilterPending}
+              aria-label="Switch to list view"
             >
               <List className="h-4 w-4" />
+              <span className="sr-only">List view</span>
             </Button>
           </div>
         </div>

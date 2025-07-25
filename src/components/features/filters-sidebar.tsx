@@ -191,10 +191,10 @@ export function FiltersSidebar({
       </div>
 
       <div className="space-y-3 sm:space-y-4">
-        <h3 className="font-semibold text-sm">Location and radius</h3>
+        <h2 className="font-semibold text-sm">Location and radius</h2>
         <div className="space-y-2 sm:space-y-3">
           <Select value={currentLocation} onValueChange={onLocationChange}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full" aria-label="Select location">
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4 text-muted-foreground" />
                 <SelectValue placeholder="Any location" />
@@ -212,7 +212,7 @@ export function FiltersSidebar({
           </Select>
 
           <Select defaultValue="any">
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full" aria-label="Select search radius">
               <div className="flex items-center gap-2">
                 <Navigation className="h-4 w-4 text-muted-foreground" />
                 <SelectValue placeholder="Any radius" />
@@ -230,7 +230,7 @@ export function FiltersSidebar({
       </div>
 
       <div className="space-y-3 sm:space-y-4">
-        <h3 className="font-semibold text-sm">Body type</h3>
+        <h2 className="font-semibold text-sm">Body type</h2>
         <div className="relative">
           <div
             className={cn(
@@ -260,10 +260,10 @@ export function FiltersSidebar({
       </div>
 
       <div className="space-y-3 sm:space-y-4">
-        <h3 className="font-semibold text-sm">Make and model</h3>
+        <h2 className="font-semibold text-sm">Make and model</h2>
         <div className="space-y-2 sm:space-y-3">
           <Select value={currentMake} onValueChange={onMakeChange}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full" aria-label="Select car make">
               <SelectValue placeholder="Any make" />
             </SelectTrigger>
             <SelectContent>
@@ -281,7 +281,7 @@ export function FiltersSidebar({
           </Select>
 
           <Select value={currentModel} onValueChange={onModelChange}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full" aria-label="Select car model">
               <SelectValue placeholder="Any model" />
             </SelectTrigger>
             <SelectContent>
@@ -301,7 +301,7 @@ export function FiltersSidebar({
       </div>
 
       <div className="space-y-3 sm:space-y-4">
-        <h3 className="font-semibold text-sm">Year range</h3>
+        <h2 className="font-semibold text-sm">Year range</h2>
         <div className="space-y-2 sm:space-y-3">
           <div className="flex gap-2">
             <Popover>
@@ -348,7 +348,7 @@ export function FiltersSidebar({
       </div>
 
       <div className="space-y-3 sm:space-y-4">
-        <h3 className="font-semibold text-sm">Price range</h3>
+        <h2 className="font-semibold text-sm">Price range</h2>
         <div className="space-y-3 sm:space-y-4">
           <Slider
             value={localPriceRange}
@@ -358,6 +358,7 @@ export function FiltersSidebar({
             min={0}
             step={1000}
             className="w-full"
+            aria-label="Price range slider"
           />
 
           <div className="flex gap-2">
@@ -374,6 +375,7 @@ export function FiltersSidebar({
                   }
                   className="pl-6 text-xs sm:text-sm"
                   placeholder="0"
+                  aria-label="Minimum price"
                 />
               </div>
             </div>
@@ -393,6 +395,7 @@ export function FiltersSidebar({
                   }
                   className="pl-6 text-xs sm:text-sm"
                   placeholder="120000"
+                  aria-label="Maximum price"
                 />
               </div>
             </div>
@@ -415,7 +418,7 @@ export function FiltersSidebar({
       </div>
 
       <div className="space-y-3 sm:space-y-4">
-        <h3 className="font-semibold text-sm">Drivetrain</h3>
+        <h2 className="font-semibold text-sm">Drivetrain</h2>
         <div className="space-y-2">
           {drivetrains.map(drivetrain => (
             <div key={drivetrain.id} className="flex items-center space-x-2">
@@ -436,7 +439,7 @@ export function FiltersSidebar({
       </div>
 
       <div className="space-y-3 sm:space-y-4">
-        <h3 className="font-semibold text-sm">Fuel type</h3>
+        <h2 className="font-semibold text-sm">Fuel type</h2>
         <div className="space-y-2">
           {fuelTypes.map(fuelType => (
             <div key={fuelType.id} className="flex items-center space-x-2">
