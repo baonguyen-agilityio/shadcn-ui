@@ -75,6 +75,7 @@ export function ActiveFilters({
             isPending && 'opacity-50'
           )}
           disabled={isPending}
+          aria-label={`Clear all ${filters.length} active filters`}
         >
           Clear all
         </Button>

@@ -155,6 +155,7 @@ export function CarList({
               isFilterPending && 'opacity-50 cursor-not-allowed'
             )}
             disabled={isFilterPending}
+            aria-label={`Compare selected cars (${compareCount} ${compareCount === 1 ? 'car' : 'cars'} selected)`}
           >
             <Repeat className="h-4 w-4" />
             <span>Compare ({compareCount})</span>
@@ -170,6 +171,8 @@ export function CarList({
               )}
               onClick={() => !isFilterPending && setViewType('grid')}
               disabled={isFilterPending}
+              aria-label="Switch to grid view"
+              aria-pressed={viewType === 'grid'}
             >
               <LayoutGrid className="h-4 w-4" />
             </Button>
@@ -182,6 +185,8 @@ export function CarList({
               )}
               onClick={() => !isFilterPending && setViewType('list')}
               disabled={isFilterPending}
+              aria-label="Switch to list view"
+              aria-pressed={viewType === 'list'}
             >
               <List className="h-4 w-4" />
             </Button>

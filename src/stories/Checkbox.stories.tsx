@@ -36,62 +36,7 @@ export const Default: Story = {
   ),
 };
 
-export const Checked: Story = {
-  args: {
-    checked: true,
-    id: 'checkbox-checked',
-  },
-  render: args => (
-    <div className="flex items-center space-x-2">
-      <Checkbox {...args} />
-      <label
-        htmlFor="checkbox-checked"
-        className="text-sm font-medium leading-none"
-      >
-        Checked checkbox
-      </label>
-    </div>
-  ),
-};
-
-export const Disabled: Story = {
-  args: {
-    disabled: true,
-    id: 'checkbox-disabled',
-  },
-  render: args => (
-    <div className="flex items-center space-x-2">
-      <Checkbox {...args} />
-      <label
-        htmlFor="checkbox-disabled"
-        className="text-sm font-medium leading-none opacity-70"
-      >
-        Disabled checkbox
-      </label>
-    </div>
-  ),
-};
-
-export const DisabledChecked: Story = {
-  args: {
-    disabled: true,
-    checked: true,
-    id: 'checkbox-disabled-checked',
-  },
-  render: args => (
-    <div className="flex items-center space-x-2">
-      <Checkbox {...args} />
-      <label
-        htmlFor="checkbox-disabled-checked"
-        className="text-sm font-medium leading-none opacity-70"
-      >
-        Disabled checked
-      </label>
-    </div>
-  ),
-};
-
-export const WithLabels: Story = {
+export const States: Story = {
   render: () => (
     <div className="flex flex-col space-y-4">
       <div className="flex items-center space-x-2">

@@ -30,15 +30,9 @@ export const Horizontal: Story = {
           </div>
         </ResizablePanel>
         <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={50} minSize={30}>
+        <ResizablePanel defaultSize={75} minSize={30}>
           <div className="flex h-full items-center justify-center p-6">
-            <span className="font-semibold">Main Content (50%)</span>
-          </div>
-        </ResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={25} minSize={15}>
-          <div className="flex h-full items-center justify-center p-6 bg-muted/50">
-            <span className="font-semibold">Details (25%)</span>
+            <span className="font-semibold">Main Content (75%)</span>
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>
@@ -62,66 +56,6 @@ export const Vertical: Story = {
         <ResizablePanel defaultSize={40} minSize={20}>
           <div className="flex h-full items-center justify-center p-6 bg-muted/50">
             <span className="font-semibold">Bottom Panel (40%)</span>
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
-  ),
-};
-
-export const WithoutHandle: Story = {
-  render: () => (
-    <div className="h-screen w-full p-4">
-      <ResizablePanelGroup
-        direction="horizontal"
-        className="min-h-[400px] rounded-lg border"
-      >
-        <ResizablePanel defaultSize={30} minSize={20}>
-          <div className="flex h-full items-center justify-center p-6 bg-muted/50">
-            <span className="font-semibold">Left Panel (30%)</span>
-          </div>
-        </ResizablePanel>
-        <ResizableHandle />
-        <ResizablePanel defaultSize={70} minSize={40}>
-          <div className="flex h-full items-center justify-center p-6">
-            <span className="font-semibold">Right Panel (70%)</span>
-          </div>
-        </ResizablePanel>
-      </ResizablePanelGroup>
-    </div>
-  ),
-};
-
-export const ComplexLayout: Story = {
-  render: () => (
-    <div className="h-screen w-full p-4">
-      <ResizablePanelGroup
-        direction="horizontal"
-        className="min-h-[500px] rounded-lg border"
-      >
-        <ResizablePanel defaultSize={20} minSize={15}>
-          <div className="flex h-full items-center justify-center p-6 bg-muted/50">
-            <span className="font-semibold">Navigation (20%)</span>
-          </div>
-        </ResizablePanel>
-        <ResizableHandle withHandle />
-        <ResizablePanelGroup direction="vertical">
-          <ResizablePanel defaultSize={70} minSize={40}>
-            <div className="flex h-full items-center justify-center p-6">
-              <span className="font-semibold">Main Content (70%)</span>
-            </div>
-          </ResizablePanel>
-          <ResizableHandle withHandle />
-          <ResizablePanel defaultSize={30} minSize={20}>
-            <div className="flex h-full items-center justify-center p-6 bg-muted/30">
-              <span className="font-semibold">Footer (30%)</span>
-            </div>
-          </ResizablePanel>
-        </ResizablePanelGroup>
-        <ResizableHandle withHandle />
-        <ResizablePanel defaultSize={25} minSize={15}>
-          <div className="flex h-full items-center justify-center p-6 bg-muted/50">
-            <span className="font-semibold">Sidebar (25%)</span>
           </div>
         </ResizablePanel>
       </ResizablePanelGroup>

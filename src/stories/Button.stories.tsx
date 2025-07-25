@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Button } from '@/components/ui/button';
+import { Heart, Plus, Settings } from 'lucide-react';
 
 const meta: Meta<typeof Button> = {
   title: 'UI/Button',
@@ -25,9 +26,6 @@ const meta: Meta<typeof Button> = {
       control: 'select',
       options: ['default', 'sm', 'lg', 'icon'],
     },
-    asChild: {
-      control: 'boolean',
-    },
     disabled: {
       control: 'boolean',
     },
@@ -43,70 +41,7 @@ export const Default: Story = {
   },
 };
 
-export const Destructive: Story = {
-  args: {
-    variant: 'destructive',
-    children: 'Delete',
-  },
-};
-
-export const Outline: Story = {
-  args: {
-    variant: 'outline',
-    children: 'Outline',
-  },
-};
-
-export const Secondary: Story = {
-  args: {
-    variant: 'secondary',
-    children: 'Secondary',
-  },
-};
-
-export const Ghost: Story = {
-  args: {
-    variant: 'ghost',
-    children: 'Ghost',
-  },
-};
-
-export const Link: Story = {
-  args: {
-    variant: 'link',
-    children: 'Link',
-  },
-};
-
-export const Small: Story = {
-  args: {
-    size: 'sm',
-    children: 'Small',
-  },
-};
-
-export const Large: Story = {
-  args: {
-    size: 'lg',
-    children: 'Large',
-  },
-};
-
-export const Icon: Story = {
-  args: {
-    size: 'icon',
-    children: '🚀',
-  },
-};
-
-export const Disabled: Story = {
-  args: {
-    disabled: true,
-    children: 'Disabled',
-  },
-};
-
-export const AllVariants: Story = {
+export const Variants: Story = {
   render: () => (
     <div className="flex flex-wrap gap-4">
       <Button variant="default">Default</Button>
@@ -119,13 +54,68 @@ export const AllVariants: Story = {
   ),
 };
 
-export const AllSizes: Story = {
+export const Sizes: Story = {
   render: () => (
     <div className="flex items-center gap-4">
       <Button size="sm">Small</Button>
       <Button size="default">Default</Button>
       <Button size="lg">Large</Button>
-      <Button size="icon">🚀</Button>
+      <Button size="icon" aria-label="Launch rocket">
+        🚀
+      </Button>
     </div>
   ),
+};
+
+export const IconButtons: Story = {
+  render: () => (
+    <div className="flex items-center gap-4">
+      <Button size="icon" aria-label="Add to favorites">
+        <Heart className="h-4 w-4" />
+      </Button>
+      <Button size="icon" variant="outline" aria-label="Add new item">
+        <Plus className="h-4 w-4" />
+      </Button>
+      <Button size="icon" variant="ghost" aria-label="Open settings">
+        <Settings className="h-4 w-4" />
+      </Button>
+    </div>
+  ),
+};
+
+export const AccessibilityExample: Story = {
+  render: () => (
+    <div className="space-y-4">
+      <div className="space-y-2">
+        <h3 className="text-sm font-medium">Good Examples (Accessible)</h3>
+        <div className="flex gap-2">
+          <Button aria-label="Save document">
+            <Plus className="h-4 w-4 mr-2" />
+            Save
+          </Button>
+          <Button size="icon" aria-label="Delete item">
+            <Heart className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+      <div className="space-y-2">
+        <h3 className="text-sm font-medium">With Screen Reader Text</h3>
+        <div className="flex gap-2">
+          <Button size="icon" aria-label="Open settings menu">
+            <Settings className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="icon" aria-label="Add new item to list">
+            <Plus className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  ),
+};
+
+export const Disabled: Story = {
+  args: {
+    disabled: true,
+    children: 'Disabled',
+  },
 };

@@ -60,6 +60,7 @@ export function YearPicker({
           onClick={goToPreviousDecade}
           disabled={currentDecadeStart <= fromYear}
           className="h-8 w-8"
+          aria-label="Go to previous decade"
         >
           <ChevronLeftIcon className="h-4 w-4" />
         </Button>
@@ -74,6 +75,7 @@ export function YearPicker({
           onClick={goToNextDecade}
           disabled={currentDecadeStart + 10 > toYear}
           className="h-8 w-8"
+          aria-label="Go to next decade"
         >
           <ChevronRightIcon className="h-4 w-4" />
         </Button>

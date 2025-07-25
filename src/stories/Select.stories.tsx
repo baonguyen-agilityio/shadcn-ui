@@ -68,22 +68,3 @@ export const Disabled: Story = {
     </Select>
   ),
 };
-
-export const Countries: Story = {
-  render: () => (
-    <Select>
-      <SelectTrigger className="w-[200px]">
-        <SelectValue placeholder="Select a country" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="us">United States</SelectItem>
-        <SelectItem value="ca">Canada</SelectItem>
-        <SelectItem value="uk">United Kingdom</SelectItem>
-        <SelectItem value="de">Germany</SelectItem>
-        <SelectItem value="fr">France</SelectItem>
-        <SelectItem value="jp">Japan</SelectItem>
-        <SelectItem value="au">Australia</SelectItem>
-      </SelectContent>
-    </Select>
-  ),
-};
